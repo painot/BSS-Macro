@@ -1,4 +1,5 @@
 -- //  Made by Paint (x1_EE) - The Happy Meal Guy
+-- // If large logic statements are present, they have been chopped into multiple lines
 
 local GITHUB = "https://raw.githubusercontent.com"
 local PSTBIN = "https://pastebin.com/raw"
@@ -358,7 +359,7 @@ local Functions = {
     end,
     
     Flames = function()
-        for i,v in pairs(PlayerFlames:GetChildren()) do
+        for _, v in pairs(PlayerFlames:GetChildren()) do
             if CompareMagnitudes(v) then
                 Farm(v)
                 break
@@ -367,7 +368,7 @@ local Functions = {
     end,
     
     Bubbles = function()
-        for i,v in pairs(Particles:GetChildren()) do
+        for _, v in pairs(Particles:GetChildren()) do
             if string.find(v.Name, "Bubble") and CompareMagnitudes(v) then
                 Farm(v)
                 break
@@ -406,7 +407,7 @@ local Functions = {
     
     Fuzzy = function()
         pcall(function()
-            for i,v in pairs(Particles:GetChildren()) do
+            for _, v in pairs(Particles:GetChildren()) do
                 if v.Name == "DustBunnyInstance" and CompareMagnitudes(v.Plane) then
                     if v:FindFirstChild("Plane") then
                         Farm(v:FindFirstChild("Plane"))
@@ -422,7 +423,7 @@ local Functions = {
     end,
     
     UnderBalloons = function()
-        for i,v in pairs(Balloons.FieldBalloons:GetChildren()) do
+        for _, v in pairs(Balloons.FieldBalloons:GetChildren()) do
             if v:FindFirstChild("BalloonRoot") and v:FindFirstChild("PlayerName") then
                 if v:FindFirstChild("PlayerName").Value == Player.Name then
                     if CompareMagnitudes(v.BalloonRoot) then
@@ -506,7 +507,7 @@ function ActivateTravelPath(path)
     -- //  reset
     -- //  travel to middle spawn location
 
-    for i, v in pairs(path) do
+    for _, v in pairs(path) do
         TravelTo(v)
     end
 end
@@ -550,18 +551,12 @@ task.spawn(function()
     end
 
     for _, part in pairs(Decorations:GetDescendants()) do
-        if part:IsA("BasePart") and (part.Parent.Name == "Bush" or part.Parent.Name == "Blue Flower") then 
+        if part:IsA("BasePart") and (part.Parent.Name == "Bush" 
+        or part.Parent.Name == "Blue Flower") or part.Parent.Name == "Mushroom" then 
             task.wait(0.05)
             part.CanCollide = false
             part.Transparency = 0.5
         end 
-    end
-
-    for i,v in pairs(Decorations.Misc:GetDescendants()) do 
-        if v.Parent.Name == "Mushroom" then
-            v.CanCollide = false
-            v.Transparency = 0.5
-        end
     end
 end)
 
@@ -591,7 +586,7 @@ task.spawn(function()
         
         if shared.MacroX.IsConverting then
             shared.MacroX.IsFarming = falsedd
-            for i, v in pairs({"Tool", "Tokens", "Flames", "Bubbles", "Fuzzy", "Crosshairs"}) do
+            for _, v in pairs({"Tool", "Tokens", "Flames", "Bubbles", "Fuzzy", "Crosshairs"}) do
                 shared.MacroX.Farming[v] = false
             end
         end]]
