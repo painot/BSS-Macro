@@ -586,7 +586,7 @@ task.spawn(function()
         
         if shared.MacroX.IsConverting then
             shared.MacroX.IsFarming = falsedd
-            for _, v in pairs({"Tool", "Tokens", "Flames", "Bubbles", "Fuzzy", "Crosshairs"}) do
+            for _, v in pairs(FarmingValueNames) do
                 shared.MacroX.Farming[v] = false
             end
         end]]
