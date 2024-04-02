@@ -1,7 +1,13 @@
 -- //  Made by Paint (x1_EE) - The Happy Meal Guy
 
-local libURL = "https://raw.githubusercontent.com/UI-Interface/CustomFIeld/main/RayField.lua"
-local UILibrary = loadstring(game:HttpGet(libURL))()
+local GITHUB = "https://raw.githubusercontent.com"
+local PSTBIN = "https://pastebin.com/raw"
+
+local URLs = {
+    UILib = GITHUB .. "/UI-Interface/CustomFIeld/main/RayField.lua",
+}
+
+local UILibrary = loadstring(game:HttpGet(URLs.UILib))()
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
