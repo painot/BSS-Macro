@@ -8,7 +8,7 @@ MacroX Features:
 - Tool and token collection
 - Pollen conversion (hive/micro-converters)
 - Gathering of flames, bubbles, fuzzy bombs and precise crosshairs.
-- Auto dispensation (sll)
+- Auto dispensation (all)
 - Supports "Toys" interactions (eg Wealth Clock) (Beesmas available)
 - Planter management
 - Auto Sticker Stack and Sticker Printer
