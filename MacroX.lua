@@ -208,11 +208,11 @@ local Sections = {
     }
 }
 
-function TitleCase(str)
+local function TitleCase(str)
     return (str:gsub("%u", " %1"):gsub("^.", string.upper)):sub(2)
 end
 
-function CreateToggle(tab, name, sectionParent, dir)
+local function CreateToggle(tab, name, sectionParent, dir)
     tab:CreateToggle({
         SectionParent = sectionParent,
         Name = TitleCase(name),
@@ -291,7 +291,7 @@ end
 
 -- //  functions
 
-function IsToken(token)
+local function IsToken(token)
     if not token.Parent then
         return false
     end
@@ -319,25 +319,25 @@ function IsToken(token)
     return false
 end
 
-function Farm(trying)
+local function Farm(trying)
     Humanoid:MoveTo(trying.Position)
     repeat 
         task.wait()
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4 or not IsToken(trying)
 end
 
-function TravelTo(trying)
+local function TravelTo(trying)
     Humanoid:MoveTo(trying.Position)
     repeat
         task.wait()
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4
 end
 
-function CompareMagnitudes(v, cust)
+local function CompareMagnitudes(v, cust)
     return (v.Position-HumanoidRootPart.Position).magnitude < (cust or shared.MacroX.Magnitude/1.4)
 end
 
-function FindValue(Table, Value)
+local function FindValue(Table, Value)
     if type(Table) == "table" then
         for index, value in pairs(Table) do
             if value == Value then
@@ -350,11 +350,11 @@ function FindValue(Table, Value)
     return false
 end
 
-function WalkTo(v3)
+local function WalkTo(v3)
     Character.Humanoid:MoveTo(v3)
 end
 
-function MakeMessage(input, extra)
+local function MakeMessage(input, extra)
     extra = extra or "N/A"
 
     local messages = {
@@ -554,11 +554,11 @@ Sequences.GetZone = function(field)
     end
 end
 
-function GetCurrentField()
+local function GetCurrentField()
     
 end
 
-function ActivateTravelPath(path)
+local function ActivateTravelPath(path)
     -- //  path must be a direct path from the Sequences table.
     -- //  reset
     -- //  travel to middle spawn location
