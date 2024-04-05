@@ -24,3 +24,5 @@ MacroX need-to-know:
 
 <br>
 I am not an advanced scripter so please suggest improvements.
+<br>
+p.s. if u dk how to execute the code pls bug out 😭😭
