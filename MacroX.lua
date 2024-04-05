@@ -20,7 +20,9 @@ local HumanoidRootPart = Character.HumanoidRootPart
 
 local AnnounceInteractions = true
 
+local FlowerZones = Workspace.FlowerZones
 local PlayerFlames = Workspace.PlayerFlames
+local Toys = Workspace.Toys
 local Particles = Workspace.Particles
 local Balloons = Workspace.Balloons
 local FieldDecos = Workspace:FindFirstChild("FieldDecos")
@@ -42,7 +44,7 @@ shared.MacroX = {
     Version = "1.0.0",
     HoneyAtStart = Player.CoreStats.Honey.Value,
     Magnitude = 50,
-    
+
     CurrentField = "",
 
     IsConverting = false,
@@ -124,7 +126,28 @@ shared.MacroX = {
         BugKills = 0,
         QuestsComplete = 0,
         Uptime = 0,
-    }
+    },
+    
+    Tables = {
+        Fields = {
+            White = {},
+            Red = {},
+            Blue = {},
+            All = {},
+        },
+        
+        Toys = {},
+        
+        BuffsIDs = {
+            ["Blue Extract"] = 2495936060,
+            ["Red Extract"] = 2495935291,
+            ["Oil"] = 2545746569,
+            ["Enzymes"] = 2584584968,
+            ["Glue"] = 2504978518,
+            ["Glitter"] = 2542899798,
+            ["Tropical Drink"] = 3835877932,
+        },
+    },
 }
 
 local FarmingValueNames = {
@@ -257,6 +280,15 @@ local Toggles = {
 
 -- //  actual code
 
+for _, v in pairs(Workspace.FlowerZones:GetChildren()) do
+    table.insert(shared.MacroX.Fields.All, v.Name)
+    table.insert(shared.MacroX.Fields[v:FindFirstChild("ColorGroup").Value or "White"], v.Name)
+end
+
+for _, v in pairs(Toys:GetChildren()) do
+    table.insert(shared.MacroX.Toys, v.Name)
+end
+
 -- //  functions
 
 function IsToken(token)
@@ -342,7 +374,7 @@ local Functions = {
     Tool = function()
         -- //  mouse1click()
     end,
-    
+
     Tokens = function() -- //  means priority is on.
         local PIDtbl = shared.MacroX.Importance.PriorityIDs
         for _, v in next, game:GetService("Workspace").Collectibles:GetChildren() do
@@ -367,7 +399,7 @@ local Functions = {
             end
         end
     end,
-    
+
     Flames = function()
         for _, v in pairs(PlayerFlames:GetChildren()) do
             if CompareMagnitudes(v) then
@@ -376,7 +408,7 @@ local Functions = {
             end
         end
     end,
-    
+
     Bubbles = function()
         for _, v in pairs(Particles:GetChildren()) do
             if string.find(v.Name, "Bubble") and CompareMagnitudes(v) then
@@ -385,7 +417,7 @@ local Functions = {
             end
         end
     end,
-    
+
     Crosshairs = function()
         local crshtbl = shared.MacroX.Crosshair.Crosshairs
         local crshrActive = shared.MacroX.Crosshair.Crosshair
@@ -414,7 +446,7 @@ local Functions = {
             table.remove(crshtbl, FindValue(crshtbl, instance))
         end
     end,
-    
+
     Fuzzy = function()
         pcall(function()
             for _, v in pairs(Particles:GetChildren()) do
@@ -427,11 +459,11 @@ local Functions = {
             end
         end)
     end,
-    
+
     Duped = function()
 
     end,
-    
+
     UnderBalloons = function()
         for _, v in pairs(Balloons.FieldBalloons:GetChildren()) do
             if v:FindFirstChild("BalloonRoot") and v:FindFirstChild("PlayerName") then
@@ -522,6 +554,10 @@ Sequences.GetZone = function(field)
     end
 end
 
+function GetCurrentField()
+    
+end
+
 function ActivateTravelPath(path)
     -- //  path must be a direct path from the Sequences table.
     -- //  reset
@@ -572,7 +608,7 @@ task.spawn(function()
 
     for _, part in pairs(Decorations:GetDescendants()) do
         if part:IsA("BasePart") and (part.Parent.Name == "Bush" 
-        or part.Parent.Name == "Blue Flower") or part.Parent.Name == "Mushroom" then 
+            or part.Parent.Name == "Blue Flower") or part.Parent.Name == "Mushroom" then 
             task.wait(0.05)
             part.CanCollide = false
             part.Transparency = 0.5
@@ -610,7 +646,7 @@ task.spawn(function()
                 shared.MacroX.Farming[v] = false
             end
         end]]
-        
+
         shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
         --[[
         if not shared.MacroX.IsConverting then
