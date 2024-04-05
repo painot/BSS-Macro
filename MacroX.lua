@@ -345,15 +345,15 @@ local Functions = {
     
     Tokens = function() -- //  means priority is on.
         local PIDtbl = shared.MacroX.Importance.PriorityIDs
-        for e,r in next, game:GetService("Workspace").Collectibles:GetChildren() do
-            if r:FindFirstChildOfClass("Decal") then
-                local tokenid = r:FindFirstChildOfClass("Decal").Texture:split('rbxassetid://')[2]
+        for _, v in next, game:GetService("Workspace").Collectibles:GetChildren() do
+            if v:FindFirstChildOfClass("Decal") then
+                local tokenid = v:FindFirstChildOfClass("Decal").Texture:split('rbxassetid://')[2]
                 if tokenid ~= nil and FindValue(PIDtbl, tokenid) then
-                    if (r.Name == Player.Name
-                        and (not FindValue(shared.MacroX.PriorityTokenStore, r)))
-                        or CompareMagnitudes(r) then
+                    if (v.Name == Player.Name
+                        and (not FindValue(shared.MacroX.PriorityTokenStore, v)))
+                        or CompareMagnitudes(v) then
 
-                        Farm(r)
+                        Farm(v)
                         break
                     end
                 end
@@ -361,8 +361,8 @@ local Functions = {
                 if FindValue(shared.MacroX.Importance.BlacklistedIDs, tokenid) then
                     BlacklistedToken = true
                 end
-                if CompareMagnitudes(r) and not BlacklistedToken then
-                    Farm(r)
+                if CompareMagnitudes(v) and not BlacklistedToken then
+                    Farm(v)
                 end
             end
         end
@@ -512,6 +512,16 @@ Sequences.Landmarks = {
     BadgeBearersGuild = {},
 }
 
+Sequences.GetZone = function(field)
+    for i, v in pairs(Sequences.Fields) do
+        for a, b in pairs(v) do
+            if a == field then
+                return i
+            end
+        end
+    end
+end
+
 function ActivateTravelPath(path)
     -- //  path must be a direct path from the Sequences table.
     -- //  reset
@@ -613,7 +623,7 @@ task.spawn(function()
 
         if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
             -- do shettek
-            -- "Tool","Tokens","Flames","Bubbles","Fuzzy","Crosshairs",
+            -- ["Tool","Tokens","Flames","Bubbles","Fuzzy","Crosshairs"]
 
             if shared.MacroX.Farming.Tool then
                 Functions.Tool()
