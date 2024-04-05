@@ -41,12 +41,15 @@ local Window = UILibrary:CreateWindow({
 shared.MacroX = {
     Version = "1.0.0",
     HoneyAtStart = Player.CoreStats.Honey.Value,
-    Uptime = 0,
     Magnitude = 50,
     
     CurrentField = "",
 
     IsConverting = false,
+    IsFarming = true,
+    IsTravelling = false,
+
+    TravellingTo = "Hives",
 
     Detection = {
         Vicious = false,
@@ -115,6 +118,13 @@ shared.MacroX = {
     },
 
     PriorityTokenStore = {},
+
+    Session = {
+        Honey = 0,
+        BugKills = 0,
+        QuestsComplete = 0,
+        Uptime = 0,
+    }
 }
 
 local FarmingValueNames = {
@@ -592,12 +602,36 @@ task.spawn(function()
         end]]
         
         shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
-        
+        --[[
         if not shared.MacroX.IsConverting then
             for i, v in pairs(shared.MacroX.Farming) do
                 if FindValue(FarmingValueNames, i) and v then
                      Functions[i]()
                 end
+            end
+        end]]
+
+        if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
+            -- do shettek
+            -- "Tool","Tokens","Flames","Bubbles","Fuzzy","Crosshairs",
+
+            if shared.MacroX.Farming.Tool then
+                Functions.Tool()
+            end
+            if shared.MacroX.Farming.Tokens then
+                Functions.Tokens()
+            end
+            if shared.MacroX.Farming.Flames then
+                Functions.Flames()
+            end
+            if shared.MacroX.Farming.Bubbles then
+                Functions.Bubbles()
+            end
+            if shared.MacroX.Farming.Fuzzy then
+                Functions.Fuzzy()
+            end
+            if shared.MacroX.Farming.Crosshairs then
+                Functions.Crosshairs()
             end
         end
     end
