@@ -1,5 +1,5 @@
 -- //  Made by Paint (x1_EE) - The Happy Meal Guy
--- // If large logic statements are present, they have been chopped into multiple lines
+-- //  If large logic statements are present, they have been chopped into multiple lines
 
 local GITHUB = "https://raw.githubusercontent.com"
 local PSTBIN = "https://pastebin.com/raw"
@@ -76,6 +76,7 @@ shared.MacroX = {
         BlueExtract = false,
         PurplePotion = false,
         TropicalDrink = false,
+        SuperSmoothie = false,
     },
 
     Crosshair = {
@@ -412,7 +413,6 @@ local FarmingFunctions = {
             Farm(instance)
             repeat
                 task.wait(0.1)
-                -- // api.walkTo(instance.Position)
                 Farm(instance)
             until not instance.Parent or instance.BrickColor == BrickColor.new("Forest green")
             task.wait(0.1)
@@ -544,7 +544,7 @@ function ActivateTravelPath(path)
     end
 end
 
--- //  detections
+-- //  Detection
 task.spawn(function()
     Particles.ChildAdded:Connect(function(instance)
         if instance.Name:find("Vicious") then
@@ -599,12 +599,12 @@ task.spawn(function()
         task.wait(0.7)
         shared.MacroX.Uptime += 0.7
         
-        -- // shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
+        -- //  shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
 
         if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
             if not shared.MacroX.IsConverting then
                 for i, v in pairs(shared.MacroX.Farming) do
-                    if FindValue(FarmingValueNames, i) and v then
+                    if FindValue(FarmingValueNames, i) and FarmingFunctions[i] and v then
                         FarmingFunctions[i]()
                     end
                 end
@@ -613,33 +613,33 @@ task.spawn(function()
     end
 end)
 
--- // Toys and Consumables
+-- //  Toys and Consumables
 
 task.spawn(function()
     while true do
         task.wait(60)
-        -- // Normal
+        -- //  Normal
 
         for i, v in pairs(shared.MacroX.Toys) do
-            if v then
+            if ToysFunctions[i] and v then
                 ToysFunctions[i]()
             end
         end
 
-        -- // Beesmas
+        -- //  Beesmas
 
         for i, v in pairs(shared.MacroX.BeesmasToys) do
-            if v then
+            if BeesmasToysFunctions[i] and v then
                 BeesmasToysFunctions[i]()
             end
         end
-    end
 
-    -- // Toys
+        -- //  Consumables
 
-    for i, v in pairs(shared.MacroX.Consumables) do
-        if v then
-            ConsumablesFunctions[i]()
+        for i, v in pairs(shared.MacroX.Consumables) do
+            if ConsumablesFunctions[i] and v then
+                ConsumablesFunctions[i]()
+            end
         end
     end
 end)
