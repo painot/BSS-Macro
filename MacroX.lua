@@ -1,11 +1,6 @@
 -- //  Made by Paint (x1_EE) - The Happy Meal Guy
 -- // If large logic statements are present, they have been chopped into multiple lines
 
--- // HUGE UPDATE INCOMING SOON 
--- // performance wise as well, 
--- // removing if-statements and adding function calls from tables
--- // which will also reduce code size substantially!
-
 local GITHUB = "https://raw.githubusercontent.com"
 local PSTBIN = "https://pastebin.com/raw"
 
@@ -385,7 +380,7 @@ local FarmingFunctions = {
     
     Bubbles = function()
         for _, v in pairs(Particles:GetChildren()) do
-            if string.find(v.Name, "Bubble") and CompareMagnitudes(v) then
+            if v.Name:find("Bubble") and CompareMagnitudes(v) then
                 Farm(v)
                 break
             end
@@ -452,6 +447,7 @@ local FarmingFunctions = {
 }
 
 local ToysFunctions = {}
+local BeesmasToysFunctions = {}
 local ConsumablesFunctions = {}
 
 -- //  how the "travel and travel sequence" system works?
@@ -544,13 +540,13 @@ end
 -- //  detections
 task.spawn(function()
     Particles.ChildAdded:Connect(function(instance)
-        if string.find(instance.Name, "Vicious") then
+        if instance.Name:find("Vicious") then
             shared.MacroX.Detection.Vicious = true
         end
     end)
 
     Particles.ChildRemoved:Connect(function(instance)
-        if string.find(instance.Name, "Vicious") then
+        if instance.Name:find("Vicious") then
             shared.MacroX.Detection.Vicious = false
         end
     end)
@@ -585,178 +581,58 @@ task.spawn(function()
             task.wait(0.05)
             part.CanCollide = false
             part.Transparency = 0.5
-        end 
+        end
     end
 end)
 
-print(table.concat({
-    "All methods here present are safe/decently safe.",
-    "Nothing in this Macro does actions that a normal player can't.",
-    "Use this Macro alone to prevent damaging interactions.",
-    "Report all disconnects and kicks by the game to the server.",
-    "I thank you for choosing MacroX!",
-}, "\n"))
-
 -- //  Farming
+
 task.spawn(function()
     while true do
         task.wait(0.7)
         shared.MacroX.Uptime += 0.7
-        --[[
-        for i, v in pairs(shared.MacroX.Farming) do
-            if not (i == "Tool") and v then
-                shared.MacroX.IsFarming = true
-            end
-        end
         
-        if shared.MacroX.IsFarming then
-            shared.MacroX.IsConverting = false
-        end
-        
-        if shared.MacroX.IsConverting then
-            shared.MacroX.IsFarming = falsedd
-            for _, v in pairs(FarmingValueNames) do
-                shared.MacroX.Farming[v] = false
-            end
-        end]]
-        
-        shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
-        --[[
-        if not shared.MacroX.IsConverting then
-            for i, v in pairs(shared.MacroX.Farming) do
-                if FindValue(FarmingValueNames, i) and v then
-                     Functions[i]()
-                end
-            end
-        end]]
+        -- // shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
 
         if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
-            -- do shettek
-            -- ["Tool","Tokens","Flames","Bubbles","Fuzzy","Crosshairs"]
-
-            if shared.MacroX.Farming.Tool then
-                FarmingFunctions.Tool()
-            end
-
-            if shared.MacroX.Farming.Tokens then
-                FarmingFunctions.Tokens()
-            end
-
-            if shared.MacroX.Farming.Flames then
-                FarmingFunctions.Flames()
-            end
-
-            if shared.MacroX.Farming.Bubbles then
-                FarmingFunctions.Bubbles()
-            end
-
-            if shared.MacroX.Farming.Fuzzy then
-                FarmingFunctions.Fuzzy()
-            end
-            
-            if shared.MacroX.Farming.Crosshairs then
-                FarmingFunctions.Crosshairs()
+            if not shared.MacroX.IsConverting then
+                for i, v in pairs(shared.MacroX.Farming) do
+                    if FindValue(FarmingValueNames, i) and v then
+                        FarmingFunctions[i]()
+                    end
+                end
             end
         end
     end
 end)
 
--- // Toys
+-- // Toys and Consumables
 
 task.spawn(function()
     while true do
         task.wait(60)
         -- // Normal
 
-        if shared.MacroX.Toys.WealthClock then
-            -- // do smt
+        for i, v in pairs(shared.MacroX.Toys) do
+            if v then
+                ToysFunctions[i]()
+            end
         end
 
-        if shared.MacroX.Toys.RedFieldBooster then
-            -- // do smt
-        end
-        
-        if shared.MacroX.Toys.BlueFieldBooster then
-            -- // do smt
-        end
-        
-        if shared.MacroX.Toys.MountainTopFieldBooster then
-            -- // do smt
-        end
-        
-        if shared.MacroX.Toys.StrawberryDispenser then
-            -- // do smt
-        end
-        
-        if shared.MacroX.Toys.BlueberryDispenser then
-            -- // do smt
-        end
-        
-        if shared.MacroX.Toys.GlueDispenser then
-            -- // do smt
-        end
-        
-        if shared.MacroX.Toys.RoyalJellyDispenser then
-            -- // do smt
-        end
+        -- // Beesmas
 
-        -- Beesmas
-
-        if shared.MacroX.BeesmasToys.Samovar then
-            -- // do smt
-        end
-
-        if shared.MacroX.BeesmasToys.Stockings then
-            -- // do smt
-        end
-
-        if shared.MacroX.BeesmasToys.HoneyWreath then
-            -- // do smt
-        end
-
-        if shared.MacroX.BeesmasToys.HoneyCandles then
-            -- // do smt
-        end
-
-        if shared.MacroX.BeesmasToys.BeesmasFeast then
-            -- // do smt
-        end
-
-        if shared.MacroX.BeesmasToys.OnettsLidArt then
-            -- // do smt
-        end
-
-        if shared.MacroX.BeesmasToys.Snowflakes then
-            -- // do smt
+        for i, v in pairs(shared.MacroX.BeesmasToys) do
+            if v then
+                BeesmasToysFunctions[i]()
+            end
         end
     end
-end)
 
--- // Consumables
+    -- // Toys
 
-task.spawn(function()
-    while true do
-        task.wait(60)
-        if shared.MacroX.Consumables.Enzymes then
-            -- // do smt
-        end
-        if shared.MacroX.Consumables.Oil then
-            -- // do smt
-        end
-        if shared.MacroX.Consumables.Glue then
-            -- // do smt
-        end
-        if shared.MacroX.Consumables.RedExtract then
-            -- // do smt
-        end
-        if shared.MacroX.Consumables.BlueExtract then
-            -- // do smt
-        end
-        if shared.MacroX.Consumables.PurplePotion then
-            -- // do smt
-        end
-        if shared.MacroX.Consumables.TropicalDrink then
-            -- // do smt
+    for i, v in pairs(shared.MacroX.Consumables) do
+        if v then
+            ConsumablesFunctions[i]()
         end
     end
 end)
