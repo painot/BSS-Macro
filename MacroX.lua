@@ -105,6 +105,7 @@ shared.MacroX = {
     },
 
     Combat = {
+        BugRun = false,
         Crab = false,
         Snail = false,
         Commando = false,
@@ -157,7 +158,7 @@ local Sections = {
 
     Combat = {
         Mobs = Tabs.Combat:CreateSection("Mobs", false),
-        Significant = Tabs.Combat:CreateSection("Significant", false),
+        Bosses = Tabs.Combat:CreateSection("Bosses", false),
     },
 
     Items = {
@@ -177,8 +178,8 @@ function TitleCase(str)
     return (str:gsub("%u", " %1"):gsub("^.", string.upper)):sub(2)
 end
 
-function CreateToggle(tab, name, sectionParent, dir)
-    tab:CreateToggle({
+function Toggle(tab, name, sectionParent, dir)
+    tab:Toggle({
         SectionParent = sectionParent,
         Name = TitleCase(name),
         Info = "",
@@ -202,7 +203,8 @@ local ssec = {
     Collection = Sections.Farming.Collection,
     Toys = Sections.Toys.Normal,
     Hive = Sections.Farming.Hive,
-    Consumables = Sections.Items.Consumables
+    Consumables = Sections.Items.Consumables,
+    Combat = Sections.Combat
 }
 
 local sdir = {
@@ -214,42 +216,47 @@ local sdir = {
 
 local Toggles = {
     Farming = {
-        Tool = CreateToggle(Tabs.Farming, "Tool", ssec.Collection, sdir.Farming),
-        Tokens = CreateToggle(Tabs.Farming, "Tokens", ssec.Collection, sdir.Farming),
-        Flames = CreateToggle(Tabs.Farming, "Flames", ssec.Collection, sdir.Farming),
-        Bubble = CreateToggle(Tabs.Farming, "Bubbles", ssec.Collection, sdir.Farming),
-        Fuzzy = CreateToggle(Tabs.Farming, "Fuzzy", ssec.Collection, sdir.Farming),
-        Crosshairs = CreateToggle(Tabs.Farming, "Crosshairs", ssec.Collection, sdir.Farming),
-        ConvertAtHive = CreateToggle(Tabs.Farming, "ConvertAtHive", ssec.Hive, sdir.Farming),
-        ConvertBalloon = CreateToggle(Tabs.Farming, "ConvertBalloon", ssec.Hive, sdir.Farming),
+        Tool = Toggle(Tabs.Farming, "Tool", ssec.Collection, sdir.Farming),
+        Tokens = Toggle(Tabs.Farming, "Tokens", ssec.Collection, sdir.Farming),
+        Flames = Toggle(Tabs.Farming, "Flames", ssec.Collection, sdir.Farming),
+        Bubble = Toggle(Tabs.Farming, "Bubbles", ssec.Collection, sdir.Farming),
+        Fuzzy = Toggle(Tabs.Farming, "Fuzzy", ssec.Collection, sdir.Farming),
+        Crosshairs = Toggle(Tabs.Farming, "Crosshairs", ssec.Collection, sdir.Farming),
+        ConvertAtHive = Toggle(Tabs.Farming, "ConvertAtHive", ssec.Hive, sdir.Farming),
+        ConvertBalloon = Toggle(Tabs.Farming, "ConvertBalloon", ssec.Hive, sdir.Farming),
     },
     Toys = {
-        WealthClock = CreateToggle(Tabs.Toys, "WealthClock", ssec.Toys.Normal, sdir.Toys),
-        StrawberryDispenser = CreateToggle(Tabs.Toys, "StrawberryDispenser", ssec.Toys.Normal, sdir.Toys),
-        BlueberryDispenser = CreateToggle(Tabs.Toys, "BlueberryDispenser", ssec.Toys.Normal, sdir.Toys),
-        GlueDispenser = CreateToggle(Tabs.Toys, "GlueDispenser", ssec.Toys.Normal, sdir.Toys),
-        RoyalJellyDispenser = CreateToggle(Tabs.Toys, "RoyalJellyDispenser", ssec.Toys.Normal, sdir.Toys),
-        Samovar = CreateToggle(Tabs.Toys, "Samovar", ssec.Toys.Beesmas, sdir.BToys),
-        Stockings = CreateToggle(Tabs.Toys, "Stockings", ssec.Toys.Beesmas, sdir.BToys),
-        HoneyWreath = CreateToggle(Tabs.Toys, "HoneyWreath", ssec.Toys.Beesmas, sdir.BToys),
-        HoneyCandles = CreateToggle(Tabs.Toys, "HoneyCandles", ssec.Toys.Beesmas, sdir.BToys),
-        BeesmasFeast = CreateToggle(Tabs.Toys, "BeesmasFeast", ssec.Toys.Beesmas, sdir.BToys),
-        OnettsLidArt = CreateToggle(Tabs.Toys, "OnettsLidArt", ssec.Toys.Beesmas, sdir.BToys),
-        Snowflakes = CreateToggle(Tabs.Toys, "Snowflakes", ssec.Toys.Beesmas, sdir.BToys),
-        RedFieldBooster = CreateToggle(Tabs.Toys, "RedFieldBooster", ssec.Toys.Normal, sdir.Toys),
-        BlueFieldBooster = CreateToggle(Tabs.Toys, "BlueFieldBooster", ssec.Toys.Normal, sdir.Toys),
-        MountainTopFieldBooster = CreateToggle(Tabs.Toys, "MountainTopFieldBooster", ssec.Toys.Normal, sdir.Toys),
+        WealthClock = Toggle(Tabs.Toys, "WealthClock", ssec.Toys.Normal, sdir.Toys),
+        StrawberryDispenser = Toggle(Tabs.Toys, "StrawberryDispenser", ssec.Toys.Normal, sdir.Toys),
+        BlueberryDispenser = Toggle(Tabs.Toys, "BlueberryDispenser", ssec.Toys.Normal, sdir.Toys),
+        GlueDispenser = Toggle(Tabs.Toys, "GlueDispenser", ssec.Toys.Normal, sdir.Toys),
+        RoyalJellyDispenser = Toggle(Tabs.Toys, "RoyalJellyDispenser", ssec.Toys.Normal, sdir.Toys),
+        Samovar = Toggle(Tabs.Toys, "Samovar", ssec.Toys.Beesmas, sdir.BToys),
+        Stockings = Toggle(Tabs.Toys, "Stockings", ssec.Toys.Beesmas, sdir.BToys),
+        HoneyWreath = Toggle(Tabs.Toys, "HoneyWreath", ssec.Toys.Beesmas, sdir.BToys),
+        HoneyCandles = Toggle(Tabs.Toys, "HoneyCandles", ssec.Toys.Beesmas, sdir.BToys),
+        BeesmasFeast = Toggle(Tabs.Toys, "BeesmasFeast", ssec.Toys.Beesmas, sdir.BToys),
+        OnettsLidArt = Toggle(Tabs.Toys, "OnettsLidArt", ssec.Toys.Beesmas, sdir.BToys),
+        Snowflakes = Toggle(Tabs.Toys, "Snowflakes", ssec.Toys.Beesmas, sdir.BToys),
+        RedFieldBooster = Toggle(Tabs.Toys, "RedFieldBooster", ssec.Toys.Normal, sdir.Toys),
+        BlueFieldBooster = Toggle(Tabs.Toys, "BlueFieldBooster", ssec.Toys.Normal, sdir.Toys),
+        MountainTopFieldBooster = Toggle(Tabs.Toys, "MountainTopFieldBooster", ssec.Toys.Normal, sdir.Toys),
 
     },
-    Combat = {},
+    Combat = {
+        BugRun = Toggle(Tabs.Combat, "BugRun", ssec.Combat.Mobs, sdir.Combat),
+        Crab = Toggle(Tabs.Combat, "Crab", ssec.Combat.Bosses, sdir.Combat),
+        Snail = Toggle(Tabs.Combat, "Snail", ssec.Combat.Bosses, sdir.Combat),
+        Commando = Toggle(Tabs.Combat, "Commando", ssec.Combat.Bosses, sdir.Combat),
+    },
     Items = {
-        Enzymes = CreateToggle(Tabs.Items, "Enzymes", ssec.Consumables, sdir.Consumables),
-        Oil = CreateToggle(Tabs.Items, "Oil", ssec.Consumables, sdir.Consumables),
-        Glue = CreateToggle(Tabs.Items, "Glue", ssec.Consumables, sdir.Consumables),
-        RedExtract = CreateToggle(Tabs.Items, "RedExtract", ssec.Consumables, sdir.Consumables),
-        BlueExtract = CreateToggle(Tabs.Items, "BlueExtract", ssec.Consumables, sdir.Consumables),
-        PurplePotion = CreateToggle(Tabs.Items, "PurplePotion", ssec.Consumables, sdir.Consumables),
-        TropicalDrink = CreateToggle(Tabs.Items, "TropicalDrink", ssec.Consumables, sdir.Consumables),
+        Enzymes = Toggle(Tabs.Items, "Enzymes", ssec.Consumables, sdir.Consumables),
+        Oil = Toggle(Tabs.Items, "Oil", ssec.Consumables, sdir.Consumables),
+        Glue = Toggle(Tabs.Items, "Glue", ssec.Consumables, sdir.Consumables),
+        RedExtract = Toggle(Tabs.Items, "RedExtract", ssec.Consumables, sdir.Consumables),
+        BlueExtract = Toggle(Tabs.Items, "BlueExtract", ssec.Consumables, sdir.Consumables),
+        PurplePotion = Toggle(Tabs.Items, "PurplePotion", ssec.Consumables, sdir.Consumables),
+        TropicalDrink = Toggle(Tabs.Items, "TropicalDrink", ssec.Consumables, sdir.Consumables),
     },
     Misc = {},
     Settings = {},
@@ -290,7 +297,7 @@ end
 
 function Farm(trying)
     Humanoid:MoveTo(trying.Position)
-    repeat 
+    repeat
         task.wait()
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4 or not IsToken(trying)
 end
@@ -517,7 +524,7 @@ Sequences.Landmarks = {
     BadgeBearersGuild = {},
 }
 
-Sequences.GetZone = function(field)
+Sequences.GetZoneFromField = function(field)
     for i, v in pairs(Sequences.Fields) do
         for a, b in pairs(v) do
             if a == field then
