@@ -20,9 +20,7 @@ local HumanoidRootPart = Character.HumanoidRootPart
 
 local AnnounceInteractions = true
 
-local FlowerZones = Workspace.FlowerZones
 local PlayerFlames = Workspace.PlayerFlames
-local Toys = Workspace.Toys
 local Particles = Workspace.Particles
 local Balloons = Workspace.Balloons
 local FieldDecos = Workspace:FindFirstChild("FieldDecos")
@@ -44,7 +42,7 @@ shared.MacroX = {
     Version = "1.0.0",
     HoneyAtStart = Player.CoreStats.Honey.Value,
     Magnitude = 50,
-
+    
     CurrentField = "",
 
     IsConverting = false,
@@ -58,7 +56,7 @@ shared.MacroX = {
         Puffshrooms = false,
     },
 
-    Farming = {
+    Farming = { -- // code layout/buttons done, still needs to be coded
         Tool = false, ToolCache = false,
         Tokens = false, TokensCache = false,
         Flames = false, FlamesCache = false,
@@ -70,7 +68,7 @@ shared.MacroX = {
         ConvertBalloon = false,
     },
 
-    Consumables = {
+    Consumables = { -- // code layout/buttons done, still needs to be coded
         Enzymes = false,
         Oil = false,
         Glue = false,
@@ -85,7 +83,7 @@ shared.MacroX = {
         Crosshairs = {},
     },
 
-    Toys = {
+    Toys = { -- // code layout/buttons done, still needs to be coded
         WealthClock = false,
         RedFieldBooster = false,
         BlueFieldBooster = false,
@@ -96,7 +94,7 @@ shared.MacroX = {
         RoyalJellyDispenser = false,
     },
 
-    BeesmasToys = {
+    BeesmasToys = { -- // code layout/buttons done, still needs to be coded
         Samovar = false,
         Stockings = false,
         HoneyWreath = false,
@@ -126,28 +124,7 @@ shared.MacroX = {
         BugKills = 0,
         QuestsComplete = 0,
         Uptime = 0,
-    },
-    
-    Tables = {
-        Fields = {
-            White = {},
-            Red = {},
-            Blue = {},
-            All = {},
-        },
-        
-        Toys = {},
-        
-        BuffsIDs = {
-            ["Blue Extract"] = 2495936060,
-            ["Red Extract"] = 2495935291,
-            ["Oil"] = 2545746569,
-            ["Enzymes"] = 2584584968,
-            ["Glue"] = 2504978518,
-            ["Glitter"] = 2542899798,
-            ["Tropical Drink"] = 3835877932,
-        },
-    },
+    }
 }
 
 local FarmingValueNames = {
@@ -161,12 +138,10 @@ local FarmingValueNames = {
 
 local Tabs = {
     Farming = Window:CreateTab("Farming"),
+    Toys = Window:CreateTab("Toys"),
     Combat = Window:CreateTab("Combat"),
-    Boost = Window:CreateTab("Boost"),
     Items = Window:CreateTab("Items"),
-    Misc = Window:CreateTab("Misc"),
     Settings = Window:CreateTab("Settings"),
-    Logs = Window:CreateTab("Debug/Logs"),
 }
 
 local Sections = {
@@ -175,15 +150,14 @@ local Sections = {
         Hive = Tabs.Farming:CreateSection("Hive", false),
     },
 
+    Toys = {
+        Normal = Tabs.Toys:CreateSection("Normal", false),
+        Beesmas = Tabs.Toys:CreateSection("Beesmas", false),
+    },
+
     Combat = {
         Mobs = Tabs.Combat:CreateSection("Mobs", false),
         Significant = Tabs.Combat:CreateSection("Significant", false),
-    },
-
-    Boost = {
-        Stickers = Tabs.Boost:CreateSection("Stickers"),
-        MiniBoosts = Tabs.Boost:CreateSection("Mini Boosts"),
-        Boosters = Tabs.Boost:CreateSection("Boosters"),
     },
 
     Items = {
@@ -192,27 +166,18 @@ local Sections = {
         Planters = Tabs.Items:CreateSection("Planters", false),
     },
 
-    Misc = {
-        Prioritising = Tabs.Misc:CreateSection("Prioritising", false),
-        Blacklisting = Tabs.Misc:CreateSection("Blacklisting", false),
-    },
-
     Settings = {
-        Player = Tabs.Misc:CreateSection("Player", false),
-        Macro = Tabs.Misc:CreateSection("Macro", false),
-        Webhooks = Tabs.Misc:CreateSection("Webhooks", false),
+        Player = Tabs.Settings:CreateSection("Player", false),
+        Macro = Tabs.Settings:CreateSection("Macro", false),
+        Webhooks = Tabs.Settings:CreateSection("Webhooks", false),
     },
-
-    Logs = {
-        Logs = Tabs.Misc:CreateSection("Debug/Logs", false),
-    }
 }
 
-local function TitleCase(str)
+function TitleCase(str)
     return (str:gsub("%u", " %1"):gsub("^.", string.upper)):sub(2)
 end
 
-local function CreateToggle(tab, name, sectionParent, dir)
+function CreateToggle(tab, name, sectionParent, dir)
     tab:CreateToggle({
         SectionParent = sectionParent,
         Name = TitleCase(name),
@@ -235,14 +200,15 @@ end
 
 local ssec = {
     Collection = Sections.Farming.Collection,
+    Toys = Sections.Toys.Normal,
     Hive = Sections.Farming.Hive,
-    Boosters = Sections.Boost.Boosters,
     Consumables = Sections.Items.Consumables
 }
 
 local sdir = {
     Farming = shared.MacroX.Farming,
     Toys = shared.MacroX.Toys,
+    BToys = shared.MacroX.BeesmasToys,
     Consumables = shared.MacroX.Consumables,
 }
 
@@ -257,12 +223,25 @@ local Toggles = {
         ConvertAtHive = CreateToggle(Tabs.Farming, "ConvertAtHive", ssec.Hive, sdir.Farming),
         ConvertBalloon = CreateToggle(Tabs.Farming, "ConvertBalloon", ssec.Hive, sdir.Farming),
     },
-    Combat = {},
-    Boost = {
-        RedFieldBooster = CreateToggle(Tabs.Boost, "RedFieldBooster", ssec.Boosters, sdir.Toys),
-        BlueFieldBooster = CreateToggle(Tabs.Boost, "BlueFieldBooster", ssec.Boosters, sdir.Toys),
-        MountainTopFieldBooster = CreateToggle(Tabs.Boost, "MountainTopFieldBooster", ssec.Boosters, sdir.Toys),
+    Toys = {
+        WealthClock = CreateToggle(Tabs.Toys, "WealthClock", ssec.Toys.Normal, sdir.Toys),
+        StrawberryDispenser = CreateToggle(Tabs.Toys, "StrawberryDispenser", ssec.Toys.Normal, sdir.Toys),
+        BlueberryDispenser = CreateToggle(Tabs.Toys, "BlueberryDispenser", ssec.Toys.Normal, sdir.Toys),
+        GlueDispenser = CreateToggle(Tabs.Toys, "GlueDispenser", ssec.Toys.Normal, sdir.Toys),
+        RoyalJellyDispenser = CreateToggle(Tabs.Toys, "RoyalJellyDispenser", ssec.Toys.Normal, sdir.Toys),
+        Samovar = CreateToggle(Tabs.Toys, "Samovar", ssec.Toys.Beesmas, sdir.BToys),
+        Stockings = CreateToggle(Tabs.Toys, "Stockings", ssec.Toys.Beesmas, sdir.BToys),
+        HoneyWreath = CreateToggle(Tabs.Toys, "HoneyWreath", ssec.Toys.Beesmas, sdir.BToys),
+        HoneyCandles = CreateToggle(Tabs.Toys, "HoneyCandles", ssec.Toys.Beesmas, sdir.BToys),
+        BeesmasFeast = CreateToggle(Tabs.Toys, "BeesmasFeast", ssec.Toys.Beesmas, sdir.BToys),
+        OnettsLidArt = CreateToggle(Tabs.Toys, "OnettsLidArt", ssec.Toys.Beesmas, sdir.BToys),
+        Snowflakes = CreateToggle(Tabs.Toys, "Snowflakes", ssec.Toys.Beesmas, sdir.BToys),
+        RedFieldBooster = CreateToggle(Tabs.Toys, "RedFieldBooster", ssec.Toys.Normal, sdir.Toys),
+        BlueFieldBooster = CreateToggle(Tabs.Toys, "BlueFieldBooster", ssec.Toys.Normal, sdir.Toys),
+        MountainTopFieldBooster = CreateToggle(Tabs.Toys, "MountainTopFieldBooster", ssec.Toys.Normal, sdir.Toys),
+
     },
+    Combat = {},
     Items = {
         Enzymes = CreateToggle(Tabs.Items, "Enzymes", ssec.Consumables, sdir.Consumables),
         Oil = CreateToggle(Tabs.Items, "Oil", ssec.Consumables, sdir.Consumables),
@@ -277,21 +256,11 @@ local Toggles = {
     Logs = {},
 }
 
-
 -- //  actual code
-
-for _, v in pairs(Workspace.FlowerZones:GetChildren()) do
-    table.insert(shared.MacroX.Fields.All, v.Name)
-    table.insert(shared.MacroX.Fields[v:FindFirstChild("ColorGroup").Value or "White"], v.Name)
-end
-
-for _, v in pairs(Toys:GetChildren()) do
-    table.insert(shared.MacroX.Toys, v.Name)
-end
 
 -- //  functions
 
-local function IsToken(token)
+function IsToken(token)
     if not token.Parent then
         return false
     end
@@ -319,25 +288,25 @@ local function IsToken(token)
     return false
 end
 
-local function Farm(trying)
+function Farm(trying)
     Humanoid:MoveTo(trying.Position)
     repeat 
         task.wait()
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4 or not IsToken(trying)
 end
 
-local function TravelTo(trying)
+function TravelTo(trying)
     Humanoid:MoveTo(trying.Position)
     repeat
         task.wait()
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4
 end
 
-local function CompareMagnitudes(v, cust)
+function CompareMagnitudes(v, cust)
     return (v.Position-HumanoidRootPart.Position).magnitude < (cust or shared.MacroX.Magnitude/1.4)
 end
 
-local function FindValue(Table, Value)
+function FindValue(Table, Value)
     if type(Table) == "table" then
         for index, value in pairs(Table) do
             if value == Value then
@@ -350,11 +319,11 @@ local function FindValue(Table, Value)
     return false
 end
 
-local function WalkTo(v3)
+function WalkTo(v3)
     Character.Humanoid:MoveTo(v3)
 end
 
-local function MakeMessage(input, extra)
+function MakeMessage(input, extra)
     extra = extra or "N/A"
 
     local messages = {
@@ -370,11 +339,11 @@ local function MakeMessage(input, extra)
     return messages[input] or "None"
 end
 
-local Functions = {
+local FarmingFunctions = {
     Tool = function()
         -- //  mouse1click()
     end,
-
+    
     Tokens = function() -- //  means priority is on.
         local PIDtbl = shared.MacroX.Importance.PriorityIDs
         for _, v in next, game:GetService("Workspace").Collectibles:GetChildren() do
@@ -399,7 +368,7 @@ local Functions = {
             end
         end
     end,
-
+    
     Flames = function()
         for _, v in pairs(PlayerFlames:GetChildren()) do
             if CompareMagnitudes(v) then
@@ -408,7 +377,7 @@ local Functions = {
             end
         end
     end,
-
+    
     Bubbles = function()
         for _, v in pairs(Particles:GetChildren()) do
             if string.find(v.Name, "Bubble") and CompareMagnitudes(v) then
@@ -417,7 +386,7 @@ local Functions = {
             end
         end
     end,
-
+    
     Crosshairs = function()
         local crshtbl = shared.MacroX.Crosshair.Crosshairs
         local crshrActive = shared.MacroX.Crosshair.Crosshair
@@ -446,7 +415,7 @@ local Functions = {
             table.remove(crshtbl, FindValue(crshtbl, instance))
         end
     end,
-
+    
     Fuzzy = function()
         pcall(function()
             for _, v in pairs(Particles:GetChildren()) do
@@ -459,11 +428,11 @@ local Functions = {
             end
         end)
     end,
-
+    
     Duped = function()
 
     end,
-
+    
     UnderBalloons = function()
         for _, v in pairs(Balloons.FieldBalloons:GetChildren()) do
             if v:FindFirstChild("BalloonRoot") and v:FindFirstChild("PlayerName") then
@@ -554,11 +523,7 @@ Sequences.GetZone = function(field)
     end
 end
 
-local function GetCurrentField()
-    
-end
-
-local function ActivateTravelPath(path)
+function ActivateTravelPath(path)
     -- //  path must be a direct path from the Sequences table.
     -- //  reset
     -- //  travel to middle spawn location
@@ -608,7 +573,7 @@ task.spawn(function()
 
     for _, part in pairs(Decorations:GetDescendants()) do
         if part:IsA("BasePart") and (part.Parent.Name == "Bush" 
-            or part.Parent.Name == "Blue Flower") or part.Parent.Name == "Mushroom" then 
+        or part.Parent.Name == "Blue Flower") or part.Parent.Name == "Mushroom" then 
             task.wait(0.05)
             part.CanCollide = false
             part.Transparency = 0.5
@@ -646,7 +611,7 @@ task.spawn(function()
                 shared.MacroX.Farming[v] = false
             end
         end]]
-
+        
         shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
         --[[
         if not shared.MacroX.IsConverting then
@@ -662,23 +627,123 @@ task.spawn(function()
             -- ["Tool","Tokens","Flames","Bubbles","Fuzzy","Crosshairs"]
 
             if shared.MacroX.Farming.Tool then
-                Functions.Tool()
+                FarmingFunctions.Tool()
             end
             if shared.MacroX.Farming.Tokens then
-                Functions.Tokens()
+                FarmingFunctions.Tokens()
             end
             if shared.MacroX.Farming.Flames then
-                Functions.Flames()
+                FarmingFunctions.Flames()
             end
             if shared.MacroX.Farming.Bubbles then
-                Functions.Bubbles()
+                FarmingFunctions.Bubbles()
             end
             if shared.MacroX.Farming.Fuzzy then
-                Functions.Fuzzy()
+                FarmingFunctions.Fuzzy()
             end
             if shared.MacroX.Farming.Crosshairs then
-                Functions.Crosshairs()
+                FarmingFunctions.Crosshairs()
             end
+        end
+    end
+end)
+
+-- toys
+
+task.spawn(function()
+    while true do
+        task.wait(60)
+        -- normal
+
+        if shared.MacroX.Toys.WealthClock then
+            -- // do smt
+        end
+        
+        if shared.MacroX.Toys.RedFieldBooster then
+            -- // do smt
+        end
+        
+        if shared.MacroX.Toys.BlueFieldBooster then
+            -- // do smt
+        end
+        
+        if shared.MacroX.Toys.MountainTopFieldBooster then
+            -- // do smt
+        end
+        
+        if shared.MacroX.Toys.StrawberryDispenser then
+            -- // do smt
+        end
+        
+        if shared.MacroX.Toys.BlueberryDispenser then
+            -- // do smt
+        end
+        
+        if shared.MacroX.Toys.GlueDispenser then
+            -- // do smt
+        end
+        
+        if shared.MacroX.Toys.RoyalJellyDispenser then
+            -- // do smt
+        end
+
+        -- beesmas
+
+        if shared.MacroX.BeesmasToys.Samovar then
+            -- // do smt
+        end
+
+        if shared.MacroX.BeesmasToys.Stockings then
+            -- // do smt
+        end
+
+        if shared.MacroX.BeesmasToys.HoneyWreath then
+            -- // do smt
+        end
+
+        if shared.MacroX.BeesmasToys.HoneyCandles then
+            -- // do smt
+        end
+
+        if shared.MacroX.BeesmasToys.BeesmasFeast then
+            -- // do smt
+        end
+
+        if shared.MacroX.BeesmasToys.OnettsLidArt then
+            -- // do smt
+        end
+
+        if shared.MacroX.BeesmasToys.Snowflakes then
+            -- // do smt
+        end
+    end
+end)
+
+-- consumables
+
+task.spawn(function()
+    while true do
+        task.wait(60)
+        if shared.MacroX.Consumables.Enzymes then
+            -- // do smt
+        end
+        if shared.MacroX.Consumables.Oil then
+            -- // do smt
+        end
+        if shared.MacroX.Consumables.Glue then
+            -- // do smt
+        end
+        if shared.MacroX.Consumables.RedExtract then
+            -- // do smt
+        end
+        if shared.MacroX.Consumables.BlueExtract then
+            -- // do smt
+        end
+        if shared.MacroX.Consumables.PurplePotion then
+            -- // do smt
+        end
+        if shared.MacroX.Consumables.TropicalDrink then
+            -- // do smt
         end
     end
 end)
