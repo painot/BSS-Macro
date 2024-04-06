@@ -1,6 +1,11 @@
 -- //  Made by Paint (x1_EE) - The Happy Meal Guy
 -- // If large logic statements are present, they have been chopped into multiple lines
 
+-- // HUGE UPDATE INCOMING SOON 
+-- // performance wise as well, 
+-- // removing if-statements and adding function calls from tables
+-- // which will also reduce code size substantially!
+
 local GITHUB = "https://raw.githubusercontent.com"
 local PSTBIN = "https://pastebin.com/raw"
 
