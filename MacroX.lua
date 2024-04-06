@@ -23,6 +23,7 @@ local AnnounceInteractions = true
 local PlayerFlames = Workspace.PlayerFlames
 local Particles = Workspace.Particles
 local Balloons = Workspace.Balloons
+local Collectibles = Workspace.Collectibles
 local FieldDecos = Workspace:FindFirstChild("FieldDecos")
 local Decorations = Workspace:FindFirstChild("Decorations")
 
@@ -131,7 +132,6 @@ shared.MacroX = {
 
 local FarmingValueNames = {
     "Tool",
-    "Tokens",
     "Flames",
     "Bubbles",
     "Fuzzy",
@@ -175,12 +175,12 @@ local Sections = {
     },
 }
 
-function TitleCase(str)
+local function TitleCase(str)
     return (str:gsub("%u", " %1"):gsub("^.", string.upper)):sub(2)
 end
 
-function Toggle(tab, name, sectionParent, dir)
-    tab:Toggle({
+local function Toggle(tab, name, sectionParent, dir)
+    tab:CreateToggle({
         SectionParent = sectionParent,
         Name = TitleCase(name),
         Info = "",
@@ -268,7 +268,7 @@ local Toggles = {
 
 -- //  functions
 
-function IsToken(token)
+local function IsToken(token)
     if not token.Parent then
         return false
     end
@@ -296,25 +296,25 @@ function IsToken(token)
     return false
 end
 
-function Farm(trying)
+local function Farm(trying)
     Humanoid:MoveTo(trying.Position)
     repeat
         task.wait()
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4 or not IsToken(trying)
 end
 
-function TravelTo(trying)
+local function TravelTo(trying)
     Humanoid:MoveTo(trying.Position)
     repeat
         task.wait()
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4
 end
 
-function CompareMagnitudes(v, cust)
+local function CompareMagnitudes(v, cust)
     return (v.Position-HumanoidRootPart.Position).magnitude < (cust or shared.MacroX.Magnitude/1.4)
 end
 
-function FindValue(Table, Value)
+local function FindValue(Table, Value)
     if type(Table) == "table" then
         for index, value in pairs(Table) do
             if value == Value then
@@ -327,11 +327,11 @@ function FindValue(Table, Value)
     return false
 end
 
-function WalkTo(v3)
+local function WalkTo(v3)
     Character.Humanoid:MoveTo(v3)
 end
 
-function MakeMessage(input, extra)
+local function MakeMessage(input, extra)
     extra = extra or "N/A"
 
     local messages = {
@@ -352,27 +352,34 @@ local FarmingFunctions = {
         -- //  mouse1click()
     end,
     
-    Tokens = function() -- //  means priority is on.
+    Tokens = function(v) -- //  means priority is on.
         local PIDtbl = shared.MacroX.Importance.PriorityIDs
-        for _, v in next, game:GetService("Workspace").Collectibles:GetChildren() do
-            if v:FindFirstChildOfClass("Decal") then
-                local tokenid = v:FindFirstChildOfClass("Decal").Texture:split('rbxassetid://')[2]
-                if tokenid ~= nil and FindValue(PIDtbl, tokenid) then
-                    if (v.Name == Player.Name
-                        and (not FindValue(shared.MacroX.PriorityTokenStore, v)))
-                        or CompareMagnitudes(v) then
+        local PTStbl = shared.MacroX.PriorityTokenStore
 
-                        Farm(v)
-                        break
-                    end
-                end
-                local BlacklistedToken = false
-                if FindValue(shared.MacroX.Importance.BlacklistedIDs, tokenid) then
-                    BlacklistedToken = true
-                end
-                if CompareMagnitudes(v) and not BlacklistedToken then
+        if v:FindFirstChildOfClass("Decal") then
+            local decal = v:FindFirstChildOfClass("Decal").Texture
+            local tokenid = decal:split('rbxassetid://')[2]
+            
+            -- //  Priority token part
+
+            if tokenid ~= nil and FindValue(PIDtbl, tokenid) then
+                if (v.Name == Player.Name and (not FindValue(PTStbl, v))) or CompareMagnitudes(v) then
                     Farm(v)
                 end
+            end
+            
+            -- //  Blacklisted token part
+
+            local BlacklistedToken = false
+
+            if FindValue(shared.MacroX.Importance.BlacklistedIDs, tokenid) then
+                BlacklistedToken = true
+            end
+            
+            -- //  Normal token part
+
+            if CompareMagnitudes(v) and not BlacklistedToken then
+                Farm(v)
             end
         end
     end,
@@ -453,9 +460,17 @@ local FarmingFunctions = {
     end,
 }
 
-local ToysFunctions = {}
-local BeesmasToysFunctions = {}
-local ConsumablesFunctions = {}
+local function ActivateConsumable(Consumable)
+    -- //  activate consumable
+end
+
+local function ActivateToy(toy)
+    -- //  activate toy
+end
+
+local function ActivateBeesmasToy(toy)
+    -- //  activate beesmas toy
+end
 
 -- //  how the "travel and travel sequence" system works?
 -- //  it resets your character then travels inbetween the
@@ -534,16 +549,6 @@ Sequences.GetZoneFromField = function(field)
     end
 end
 
-function ActivateTravelPath(path)
-    -- //  path must be a direct path from the Sequences table.
-    -- //  reset
-    -- //  travel to middle spawn location
-
-    for _, v in pairs(path) do
-        TravelTo(v)
-    end
-end
-
 -- //  Detection
 task.spawn(function()
     Particles.ChildAdded:Connect(function(instance)
@@ -611,6 +616,16 @@ task.spawn(function()
             end
         end
     end
+
+    -- //  Tokens
+
+    Collectibles.ChildAdded:Connect(function(v)
+        if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
+            if shared.MacroX.Farming.Tool then
+                FarmingFunctions.Tool()
+            end
+        end
+    end)
 end)
 
 -- //  Toys and Consumables
@@ -618,27 +633,28 @@ end)
 task.spawn(function()
     while true do
         task.wait(60)
+        
         -- //  Normal
 
         for i, v in pairs(shared.MacroX.Toys) do
-            if ToysFunctions[i] and v then
-                ToysFunctions[i]()
+            if v then
+                ActivateToy(i)
             end
         end
 
         -- //  Beesmas
 
         for i, v in pairs(shared.MacroX.BeesmasToys) do
-            if BeesmasToysFunctions[i] and v then
-                BeesmasToysFunctions[i]()
+            if v then
+                ActivateBeesmasToy(i)
             end
         end
 
         -- //  Consumables
 
         for i, v in pairs(shared.MacroX.Consumables) do
-            if ConsumablesFunctions[i] and v then
-                ConsumablesFunctions[i]()
+            if v then
+                ActivateConsumable(i)
             end
         end
     end
