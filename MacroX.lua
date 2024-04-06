@@ -446,6 +446,9 @@ local FarmingFunctions = {
     end,
 }
 
+local ToysFunctions = {}
+local ConsumablesFunctions = {}
+
 -- //  how the "travel and travel sequence" system works?
 -- //  it resets your character then travels inbetween the
 -- //  daily and total honey lb
@@ -629,18 +632,23 @@ task.spawn(function()
             if shared.MacroX.Farming.Tool then
                 FarmingFunctions.Tool()
             end
+
             if shared.MacroX.Farming.Tokens then
                 FarmingFunctions.Tokens()
             end
+
             if shared.MacroX.Farming.Flames then
                 FarmingFunctions.Flames()
             end
+
             if shared.MacroX.Farming.Bubbles then
                 FarmingFunctions.Bubbles()
             end
+
             if shared.MacroX.Farming.Fuzzy then
                 FarmingFunctions.Fuzzy()
             end
+            
             if shared.MacroX.Farming.Crosshairs then
                 FarmingFunctions.Crosshairs()
             end
@@ -648,17 +656,17 @@ task.spawn(function()
     end
 end)
 
--- toys
+-- // Toys
 
 task.spawn(function()
     while true do
         task.wait(60)
-        -- normal
+        -- // Normal
 
         if shared.MacroX.Toys.WealthClock then
             -- // do smt
         end
-        
+
         if shared.MacroX.Toys.RedFieldBooster then
             -- // do smt
         end
@@ -687,7 +695,7 @@ task.spawn(function()
             -- // do smt
         end
 
-        -- beesmas
+        -- Beesmas
 
         if shared.MacroX.BeesmasToys.Samovar then
             -- // do smt
@@ -719,7 +727,7 @@ task.spawn(function()
     end
 end)
 
--- consumables
+-- // Consumables
 
 task.spawn(function()
     while true do
