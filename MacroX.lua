@@ -58,12 +58,12 @@ shared.MacroX = {
     },
 
     Farming = { -- // code layout/buttons done, still needs to be coded
-        Tool = false, ToolCache = false,
-        Tokens = false, TokensCache = false,
-        Flames = false, FlamesCache = false,
-        Bubbles = false, BubblesCache = false,
-        Fuzzy = false, FuzzyCache = false,
-        Crosshairs = false, CrosshairsCache = false,
+        Tool = false,
+        Tokens = false,
+        Flames = false,
+        Bubbles = false,
+        Fuzzy = false,
+        Crosshairs = false,
 
         ConvertAtHive = false,
         ConvertBalloon = false,
@@ -633,7 +633,7 @@ end)
 task.spawn(function()
     while true do
         task.wait(60)
-        
+
         -- //  Normal
 
         for i, v in pairs(shared.MacroX.Toys) do
