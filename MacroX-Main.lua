@@ -2,13 +2,20 @@
 -- //  If large logic statements are present, they have been chopped into multiple lines
 
 local GITHUB = "https://raw.githubusercontent.com"
-local PSTBIN = "https://pastebin.com/raw"
+local uAPI = GITHUB .. "/painot/MacroX/main/API"
 
 local URLs = {
     UILib = GITHUB .. "/UI-Interface/CustomFIeld/main/RayField.lua",
+
+    BoostFPS = uAPI .. "/BoostFPS.lua",
+    Pathfinding = uAPI .. "/Pathfinding.lua",
+    Planters = uAPI .. "/Planters.lua",
 }
 
 local UILibrary = loadstring(game:HttpGet(URLs.UILib))()
+local BoostFPS = loadstring(game:HttpGet(URLs.BoostFPS))()
+local Pathfinding = loadstring(game:HttpGet(URLs.Pathfinding))()
+local Planters = loadstring(game:HttpGet(URLs.Planters))()
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
