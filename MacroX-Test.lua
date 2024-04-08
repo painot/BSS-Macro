@@ -200,11 +200,7 @@ function Toggle(tab, name, sectionParent, dir)
         Flag = name,    
         Callback = function(Value)
             dir[name] = Value
-
-            if dir[name.."Cache"] then
-                dir[name.."Cache"] = Value
-            end
-
+            
             if AnnounceInteractions then
                 print(name, "was changed to", Value)
             end
@@ -217,31 +213,9 @@ end
 -- //  functions
 
 local function IsToken(token)
-    if not token.Parent then
-        return false
-    end
-
-    if token then
-        if token.Orientation.Z ~= 0 then
-            return false
-        end
-
-        if not token:FindFirstChild("FrontDecal") then
-            return false
-        end
-
-        if not (token.Name == "C") then
-            return false
-        end
-
-        if not token:IsA("Part") then
-            return false
-        end
-
-        return true
-    end
-
-    return false
+    return token and token.Parent and token.Orientation.Z == 0 and
+           token:FindFirstChild("FrontDecal") and token.Name == "C" and
+           token:IsA("Part")
 end
 
 local function Farm(trying)
@@ -420,17 +394,7 @@ local function ActivateBeesmasToy(toy)
     -- //  activate beesmas toy
 end
 
--- //  how the "travel and travel sequence" system works?
--- //  it resets your character then travels inbetween the
--- //  daily and total honey lb
--- //  then what it does is it executes a pre-made 
--- //  path by me to follow whereever
--- //  this may be unreliable esp for things like travel back to hive
--- //  i have a method in place to do where i 
--- //  reverse the order but that may not be possible
--- //  this sequence will support: SZ, 5BZ, 10BZ, 
--- //  15BZ, 25BZ, 35BZ (not 20BZ (except for ant/glue disp.) and 30BZ)
--- //  travel sequences for dispensers, fields and "toys" will be added later on.
+-- //  Sequences stuff
 
 local Sequences = {}
 
