@@ -163,21 +163,24 @@ local Toggles = {}
 
 for daddytabname, daddytabcontents in pairs(MacroXDaddyTabs) do
     local tab = Window:CreateTab(daddytabname)
+
     Tabs[daddytabname] = tab
     Sections[daddytabname] = {}
+    Toggles[daddytabname] = {}
 
     for sectionname, sectioncontents in pairs(daddytabcontents) do
         local section = tab:CreateSection(sectioncontents, false)
+        
         Sections[sectionname] = section
+        Tabs[daddytabname][sectionname] = {}
 
         for elementname, elementcontents in pairs(sectioncontents) do
             if type(elementcontents) == "boolean" then
-                Toggle(tab, elementname, section, shared.MacroX[daddytabname][sectionname][elementname])
-            end
-            if type(elementcontents) == "string" then
+                local a = Toggle(tab, elementname, section, shared.MacroX[daddytabname][sectionname][elementname])
+                Toggles[daddytabname][sectionname][elementname] = a
+            elseif type(elementcontents) == "string" then
                 -- Input()
-            end
-            if type(elementcontents) == "number" then
+            elseif type(elementcontents) == "number" then
                 -- Slider()
             end
         end
