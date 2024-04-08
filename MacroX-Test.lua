@@ -61,27 +61,33 @@ shared.MacroX = {
         Puffshrooms = false,
     },
 
-    Farming = { -- // code layout/buttons done, still needs to be coded
-        Tool = false,
-        Tokens = false,
-        Flames = false,
-        Bubbles = false,
-        Fuzzy = false,
-        Crosshairs = false,
-
-        ConvertAtHive = false,
-        ConvertBalloon = false,
+    Farming = {
+        Collection = {
+            Tool = false,
+            Tokens = false,
+            Flames = false,
+            Bubbles = false,
+            Fuzzy = false,
+            Crosshairs = false,
+        },
+        Hive = {
+            ConvertAtHive = false,
+            ConvertBalloon = false,
+        },
     },
 
-    Consumables = { -- // code layout/buttons done, still needs to be coded
-        Enzymes = false,
-        Oil = false,
-        Glue = false,
-        RedExtract = false,
-        BlueExtract = false,
-        PurplePotion = false,
-        TropicalDrink = false,
-        SuperSmoothie = false,
+    Items = {
+        Consumables = {
+            Enzymes = false,
+            Oil = false,
+            Glue = false,
+            RedExtract = false,
+            BlueExtract = false,
+            PurplePotion = false,
+            TropicalDrink = false,
+            SuperSmoothie = false,
+        },
+        Planters = {},
     },
 
     Crosshair = {
@@ -90,31 +96,36 @@ shared.MacroX = {
     },
 
     Toys = { -- // code layout/buttons done, still needs to be coded
-        WealthClock = false,
-        RedFieldBooster = false,
-        BlueFieldBooster = false,
-        MountainTopFieldBooster = false,
-        StrawberryDispenser = false,
-        BlueberryDispenser = false,
-        GlueDispenser = false,
-        RoyalJellyDispenser = false,
-    },
-
-    BeesmasToys = { -- // code layout/buttons done, still needs to be coded
-        Samovar = false,
-        Stockings = false,
-        HoneyWreath = false,
-        HoneyCandles = false,
-        BeesmasFeast = false,
-        OnettsLidArt = false,
-        Snowflakes = false,
+        Normal = {
+            WealthClock = false,
+            RedFieldBooster = false,
+            BlueFieldBooster = false,
+            MountainTopFieldBooster = false,
+            StrawberryDispenser = false,
+            BlueberryDispenser = false,
+            GlueDispenser = false,
+            RoyalJellyDispenser = false, 
+        },
+        Beesmas = {
+            Samovar = false,
+            Stockings = false,
+            HoneyWreath = false,
+            HoneyCandles = false,
+            BeesmasFeast = false,
+            OnettsLidArt = false,
+            Snowflakes = false,
+        },
     },
 
     Combat = {
-        BugRun = false,
-        Crab = false,
-        Snail = false,
-        Commando = false,
+        Mobs = {
+            BugRun = false,
+        },
+        Bosses = {
+            Crab = false,
+            Snail = false,
+            Commando = false,
+        }, 
     },
 
     Misc = {},
@@ -144,42 +155,32 @@ local FarmingValueNames = {
 
 -- //  UI Creation
 
-local creation = {
-    ["Farming"] = {
-        ["Collection"] = {"Tokens", "Flames", "Bubbles", "Fuzzy", "Crosshairs"}, 
-        ["Hive"] = {"ConvertAtHive", "ConvertBalloon"},
-    },
-    ["Toys"] = {
-        ["Normal"] = {"WealthClock", "RedFieldBooster", "BlueFieldBooster", "MountainTopFieldBooster",
-        "StrawberryDispenser", "BlueberryDispenser", "GlueDispenser", "RoyalJellyDispenser"},
-        ["Beesmas"] = {"Samovar", "Stockings", "HoneyWreath", "HoneyCandles", "BeesmasFeast", "OnettsLidArt", "Snowflakes"},
-    },
-    ["Combat"] = {
-        ["Mobs"] = {"BugRun"},
-        ["Bosses"] = {"Crab", "Snail", "Commando"},
-    },
-    ["Items"] = {["Planters"] = {}, 
-        ["Consumables"] = {"Enzymes", "Oil", "Glue", "RedExtract", "BlueExtract", "PurplePotion", "TropicalDrink", "SuperSmoothie"}
-    },
-    ["Settings"] = {
-        ["Player"] = {},
-        ["Macro"] = {},
-        ["Webhook"] = {},
-    },
-}
-
+local MacroXDaddyTabs = {"Farming", "Items", "Toys", "Combat"}
 
 local Tabs = {}
 local Sections = {}
 local Toggles = {}
 
-for i, v in pairs(creation) do
-    local tab = Window:CreateTab(i)
-    Tabs[i] = tab
-    Sections[i] = {}
+for daddytabname, daddytabcontents in pairs(MacroXDaddyTabs) do
+    local tab = Window:CreateTab(daddytabname)
+    Tabs[daddytabname] = tab
+    Sections[daddytabname] = {}
 
-    for k, c in pairs(v) do
-        Sections[c] = tab:CreateSection(c, false)
+    for sectionname, sectioncontents in pairs(daddytabcontents) do
+        local section = tab:CreateSection(sectioncontents, false)
+        Sections[sectionname] = section
+
+        for elementname, elementcontents in pairs(sectioncontents) do
+            if type(elementcontents) == "boolean" then
+                Toggle(tab, elementname, section, shared.MacroX[daddytabname][sectionname][elementname])
+            end
+            if type(elementcontents) == "string" then
+                -- Input()
+            end
+            if type(elementcontents) == "number" then
+                -- Slider()
+            end
+        end
     end
 end
 
@@ -187,7 +188,7 @@ local function TitleCase(str)
     return (str:gsub("%u", " %1"):gsub("^.", string.upper)):sub(2)
 end
 
-local function Toggle(tab, name, sectionParent, dir)
+function Toggle(tab, name, sectionParent, dir)
     tab:CreateToggle({
         SectionParent = sectionParent,
         Name = TitleCase(name),
@@ -207,70 +208,6 @@ local function Toggle(tab, name, sectionParent, dir)
         end,
     })
 end
-
-local ssec = {
-    Collection = Sections.Farming.Collection,
-    Toys = Sections.Toys.Normal,
-    Hive = Sections.Farming.Hive,
-    Consumables = Sections.Items.Consumables,
-    Combat = Sections.Combat
-}
-
-local sdir = {
-    Farming = shared.MacroX.Farming,
-    Toys = shared.MacroX.Toys,
-    BToys = shared.MacroX.BeesmasToys,
-    Consumables = shared.MacroX.Consumables,
-}
-
-local Toggles = {
-    Farming = {
-        Tool = Toggle(Tabs.Farming, "Tool", ssec.Collection, sdir.Farming),
-        Tokens = Toggle(Tabs.Farming, "Tokens", ssec.Collection, sdir.Farming),
-        Flames = Toggle(Tabs.Farming, "Flames", ssec.Collection, sdir.Farming),
-        Bubble = Toggle(Tabs.Farming, "Bubbles", ssec.Collection, sdir.Farming),
-        Fuzzy = Toggle(Tabs.Farming, "Fuzzy", ssec.Collection, sdir.Farming),
-        Crosshairs = Toggle(Tabs.Farming, "Crosshairs", ssec.Collection, sdir.Farming),
-        ConvertAtHive = Toggle(Tabs.Farming, "ConvertAtHive", ssec.Hive, sdir.Farming),
-        ConvertBalloon = Toggle(Tabs.Farming, "ConvertBalloon", ssec.Hive, sdir.Farming),
-    },
-    Toys = {
-        WealthClock = Toggle(Tabs.Toys, "WealthClock", ssec.Toys.Normal, sdir.Toys),
-        StrawberryDispenser = Toggle(Tabs.Toys, "StrawberryDispenser", ssec.Toys.Normal, sdir.Toys),
-        BlueberryDispenser = Toggle(Tabs.Toys, "BlueberryDispenser", ssec.Toys.Normal, sdir.Toys),
-        GlueDispenser = Toggle(Tabs.Toys, "GlueDispenser", ssec.Toys.Normal, sdir.Toys),
-        RoyalJellyDispenser = Toggle(Tabs.Toys, "RoyalJellyDispenser", ssec.Toys.Normal, sdir.Toys),
-        Samovar = Toggle(Tabs.Toys, "Samovar", ssec.Toys.Beesmas, sdir.BToys),
-        Stockings = Toggle(Tabs.Toys, "Stockings", ssec.Toys.Beesmas, sdir.BToys),
-        HoneyWreath = Toggle(Tabs.Toys, "HoneyWreath", ssec.Toys.Beesmas, sdir.BToys),
-        HoneyCandles = Toggle(Tabs.Toys, "HoneyCandles", ssec.Toys.Beesmas, sdir.BToys),
-        BeesmasFeast = Toggle(Tabs.Toys, "BeesmasFeast", ssec.Toys.Beesmas, sdir.BToys),
-        OnettsLidArt = Toggle(Tabs.Toys, "OnettsLidArt", ssec.Toys.Beesmas, sdir.BToys),
-        Snowflakes = Toggle(Tabs.Toys, "Snowflakes", ssec.Toys.Beesmas, sdir.BToys),
-        RedFieldBooster = Toggle(Tabs.Toys, "RedFieldBooster", ssec.Toys.Normal, sdir.Toys),
-        BlueFieldBooster = Toggle(Tabs.Toys, "BlueFieldBooster", ssec.Toys.Normal, sdir.Toys),
-        MountainTopFieldBooster = Toggle(Tabs.Toys, "MountainTopFieldBooster", ssec.Toys.Normal, sdir.Toys),
-
-    },
-    Combat = {
-        BugRun = Toggle(Tabs.Combat, "BugRun", ssec.Combat.Mobs, sdir.Combat),
-        Crab = Toggle(Tabs.Combat, "Crab", ssec.Combat.Bosses, sdir.Combat),
-        Snail = Toggle(Tabs.Combat, "Snail", ssec.Combat.Bosses, sdir.Combat),
-        Commando = Toggle(Tabs.Combat, "Commando", ssec.Combat.Bosses, sdir.Combat),
-    },
-    Items = {
-        Enzymes = Toggle(Tabs.Items, "Enzymes", ssec.Consumables, sdir.Consumables),
-        Oil = Toggle(Tabs.Items, "Oil", ssec.Consumables, sdir.Consumables),
-        Glue = Toggle(Tabs.Items, "Glue", ssec.Consumables, sdir.Consumables),
-        RedExtract = Toggle(Tabs.Items, "RedExtract", ssec.Consumables, sdir.Consumables),
-        BlueExtract = Toggle(Tabs.Items, "BlueExtract", ssec.Consumables, sdir.Consumables),
-        PurplePotion = Toggle(Tabs.Items, "PurplePotion", ssec.Consumables, sdir.Consumables),
-        TropicalDrink = Toggle(Tabs.Items, "TropicalDrink", ssec.Consumables, sdir.Consumables),
-    },
-    Misc = {},
-    Settings = {},
-    Logs = {},
-}
 
 -- //  actual code
 
