@@ -23,6 +23,4 @@ MacroX need-to-know:
 - If ran on an Emulator, it will be laggier than usual because of the device's streaming capabilities.
 
 <br>
-I am not an advanced scripter so please suggest improvements.
-<br>
-p.s. if u dk how to execute the code pls bug out 😭😭
+p.s. if u dk how to execute the code just leave 💀
