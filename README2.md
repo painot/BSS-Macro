@@ -21,3 +21,4 @@ Misc stuff innit:
 - If you get banned with a crap executor, not on me
 - Will add advanced webhook and hourly reports system soon
 - Will add a direct suggestion feature lmao
+- Emulators are supported but they're crap in performance
