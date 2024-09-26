@@ -23,3 +23,6 @@ Misc stuff innit:
 - Will add advanced webhook and hourly reports system soon
 - Will add a direct suggestion feature lmao
 - Emulators are supported but they're crap in performance
+
+<br>
+Stable release expected to come out January '25
