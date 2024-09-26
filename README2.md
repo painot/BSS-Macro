@@ -10,13 +10,14 @@ Introduction:
 
 Features:
 - Auto use Toys and Interactables (Boosters, Wealth etc)
-- Auto Tool, Convert and Planter
+- Auto Tool, Convert, Gather and Planter
 - Safety modes and killswitches
+- Auto Sticker Mechanics
 - Everything that is essential to progress in game
 
 <br>
 
 Misc stuff innit:
 - If you get banned with a crap executor, not on me
-- Will add webhooks and hourly reports soon
+- Will add advanced webhook and hourly reports system soon
 - Will add a direct suggestion feature lmao
