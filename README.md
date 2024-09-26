@@ -1,5 +1,11 @@
 # MacroX
 
+<br>
+
+(I've bunned the GNU license just don't violate)
+
+<br>
+
 Introduction:
 - MacroX is an assistance application for you downys
 - 100% safe to use, experience-wise. Inside, ofc.
