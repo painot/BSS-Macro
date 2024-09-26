@@ -1,0 +1,5 @@
+to do:
+create tutorial
+create lists of functions
+optimise code
+add and finish off functions
