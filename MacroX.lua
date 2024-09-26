@@ -1,3 +1,5 @@
+-- //  I SUGGEST NOT TO USE THIS RN LMAO
+
 -- //  Made by Paint (x1_EE) - The Happy Meal Guy
 -- //  If large logic statements are present, they have been chopped into multiple lines
 
