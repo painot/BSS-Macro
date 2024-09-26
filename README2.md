@@ -13,6 +13,7 @@ Features:
 - Auto Tool, Convert, Gather and Planter
 - Safety modes and killswitches
 - Auto Sticker Mechanics
+- Advanced Auto Boosting system (pre-programmed)
 - Everything that is essential to progress in game
 
 <br>
