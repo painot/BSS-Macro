@@ -1,8 +1,22 @@
 # MacroX
 
-MacroX is an assistance application used to assist you in the progression of games.
+Introduction:
+- MacroX is an assistance application
+- 100% safe to use, experience-wise
+- You must use a good, trusted executor
+- I have taken precautions after Hyperion
+
 <br>
-A scripting utility will need to be used to execute and use these scripts.
-<br>MacroX itself will never get you system-wide banned, if ever, only within the experience.
+
+Features:
+- Auto use Toys and Interactables (Boosters, Wealth etc)
+- Auto Tool, Convert and Planter
+- Safety modes and killswitches
+- Everything that is essential to progress in game
+
 <br>
-Drastic changes were made after Hyperion was released to all clients. Use a trusted executor as I'm not responsible for you being a downy.
+
+Misc stuff innit:
+- If you get banned with a crap executor, not on me
+- Will add webhooks and hourly reports soon
+- Will add a direct suggestion feature lmao
