@@ -1,10 +1,10 @@
 # MacroX
 
 Introduction:
-- MacroX is an assistance application
-- 100% safe to use, experience-wise
-- You must use a good, trusted executor
-- I have taken precautions after Hyperion
+- MacroX is an assistance application for you downys
+- 100% safe to use, experience-wise. Inside, ofc.
+- You must use a good, trusted executor. You brokie
+- I have taken precautions after Hyperion so you don't get sent
 
 <br>
 
@@ -19,7 +19,7 @@ Features:
 <br>
 
 Misc stuff innit:
-- If you get banned with a crap executor, not on me
+- If you get banned with a crap executor, not on me lol
 - Will add advanced webhook and hourly reports system soon
 - Will add a direct suggestion feature lmao
 - Emulators are supported but they're crap in performance
