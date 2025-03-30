@@ -1,1 +1,1 @@
--- This is the start of your legendary conver with @painot.
+-- This is the start of your legendary journey with @painot.
