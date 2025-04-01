@@ -1,20 +1,15 @@
--- This is the start of your legendary journey with @painot.
+-- This is the start of your legendary journey with Paint (@painot).
+-- I SUGGEST NOT TO USE THIS RN LMAO
+-- Large statements have been chopped into multiple lines
 
--- //  I SUGGEST NOT TO USE THIS RN LMAO
--- //  the system will be restarted from the base
-
--- //  Made by Paint (x1_EE) - The Happy Meal Guy
--- //  If large logic statements are present, they have been chopped into multiple lines
-
-local GITHUB = "https://raw.githubusercontent.com"
-local uAPI = GITHUB .. "/painot/MacroX/main/API"
+local RGHUC = "https://raw.githubusercontent.com/"
+local MainBranch = RGHUC .. "/painot/MacroX/main/"
 
 local URLs = {
-    UILib = GITHUB .. "/UI-Interface/CustomFIeld/main/RayField.lua",
-
-    BoostFPS = uAPI .. "/BoostFPS.lua",
-    Pathfinding = uAPI .. "/Pathfinding.lua",
-    Planters = uAPI .. "/Planters.lua",
+    UILib = "",
+    BoostFPS = MainBranch .. "API/BoostFPS.lua",
+    Pathfinding = MainBranch .. "API/Pathfinding.lua",
+    Planters = MainBranch .. "API/Planters.lua",
 }
 
 local UILibrary = loadstring(game:HttpGet(URLs.UILib))()
