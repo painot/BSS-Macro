@@ -14,7 +14,7 @@ local APIs = {
 }
 
 local UILibrary = loadstring(game:HttpGet(UILib))()
-local BoostFPS = loadstring(game:HttpGet(APIs.BoostFPS))()
+-- local BoostFPS = loadstring(game:HttpGet(APIs.BoostFPS))()
 local Pathfinding = loadstring(game:HttpGet(APIs.Pathfinding))()
 local Planters = loadstring(game:HttpGet(APIs.Planters))()
 
@@ -218,12 +218,13 @@ local ssec = {
 
 local sdir = {
     Farming = shared.MacroX.Farming,
+    Combat = shared.MacroX.Combat,
     Toys = shared.MacroX.Toys,
     BToys = shared.MacroX.BeesmasToys,
     Consumables = shared.MacroX.Consumables,
 }
 
-local Toggles = {
+local _Toggles = {
     Farming = {
         Tool = Toggle(Tabs.Farming, "Tool", ssec.Collection, sdir.Farming),
         Tokens = Toggle(Tabs.Farming, "Tokens", ssec.Collection, sdir.Farming),
@@ -277,32 +278,9 @@ local Toggles = {
 -- functions
 
 local function IsToken(token)
-    if not token.Parent then
-        return false
-    end
-
-    if token then
-        if token.Orientation.Z ~= 0 then
-            return false
-        end
-
-        if not token:FindFirstChild("FrontDecal") then
-            return false
-        end
-
-        if not (token.Name == "C") then
-            return false
-        end
-
-        if not token:IsA("Part") then
-            return false
-        end
-
-        return true
-    end
-
-    return false
+    return (token and token.Parent and token:IsA("Part") and token.Name == "C" and token.Orientation.Z == 0 and token:FindFirstChild("FrontDecal")) or false
 end
+    
 
 local function Farm(trying)
     Humanoid:MoveTo(trying.Position)
@@ -311,7 +289,7 @@ local function Farm(trying)
     until (trying.Position-HumanoidRootPart.Position).magnitude <=4 or not IsToken(trying)
 end
 
-local function TravelTo(trying)
+local function _TravelTo(trying)
     Humanoid:MoveTo(trying.Position)
     repeat
         task.wait()
@@ -339,7 +317,7 @@ local function WalkTo(v3)
     Character.Humanoid:MoveTo(v3)
 end
 
-local function MakeMessage(input, extra)
+local function _MakeMessage(input, extra)
     extra = extra or "N/A"
 
     local messages = {
@@ -548,38 +526,33 @@ Sequences.Landmarks = {
 }
 
 Sequences.GetZoneFromField = function(field)
-    for i, v in pairs(Sequences.Fields) do
-        for a, b in pairs(v) do
-            if a == field then
-                return i
-            end
+    for zone, fields in pairs(Sequences.Fields) do
+        if fields[field] then
+            return zone
         end
     end
+    return nil
 end
 
 -- Detection
 task.spawn(function()
-    Particles.ChildAdded:Connect(function(instance)
+    local viciousChecker
+    viciousChecker = Particles.ChildAdded:Connect(function(instance)
         if instance.Name:find("Vicious") then
             shared.MacroX.Detection.Vicious = true
+            viciousChecker:Disconnect()
         end
     end)
 
-    Particles.ChildRemoved:Connect(function(instance)
-        if instance.Name:find("Vicious") then
-            shared.MacroX.Detection.Vicious = false
-        end
-    end)
-
-    Particles.ChildAdded:Connect(function(v)
-        if v.Name == "Crosshair"
-            and v ~= nil 
-            and v.BrickColor ~= BrickColor.new("Forest green") 
-            and v.BrickColor ~= BrickColor.new("Flint") 
-            and CompareMagnitudes(v) then
-
-            if #shared.MacroX.Crosshair.Crosshairs <= 3 then
+    local crosshairChecker
+    crosshairChecker = Particles.ChildAdded:Connect(function(v)
+        if v.Name == "Crosshair" and v ~= nil
+        and v.BrickColor ~= BrickColor.new("Forest green")
+        and v.BrickColor ~= BrickColor.new("Flint")
+        and CompareMagnitudes(v) then
+            if #shared.MacroX.Crosshair.Crosshairs < 3 then
                 table.insert(shared.MacroX.Crosshair.Crosshairs, v)
+                crosshairChecker:Disconnect()
             end
         end
     end)
@@ -587,18 +560,21 @@ end)
 
 -- exec on startup
 task.spawn(function()
-    for _, part in pairs(FieldDecos:GetDescendants()) do
-        task.wait(0.05)
+    local descendants1 = FieldDecos:GetDescendants()
+    for i = 1, #descendants1 do
+        local part = descendants1[i]
         if part:IsA("BasePart") then
             part.CanCollide = false
             part.Transparency = 0.5
         end
     end
-
-    for _, part in pairs(Decorations:GetDescendants()) do
+    
+    local descendants2 = Decorations:GetDescendants()
+    for i = 1, #descendants2 do
+        local part = descendants2[i]
         if part:IsA("BasePart") and (part.Parent.Name == "Bush" 
-        or part.Parent.Name == "Blue Flower") or part.Parent.Name == "Mushroom" then 
-            task.wait(0.05)
+        or part.Parent.Name == "Blue Flower" 
+        or part.Parent.Name == "Mushroom") then 
             part.CanCollide = false
             part.Transparency = 0.5
         end
@@ -615,11 +591,9 @@ task.spawn(function()
         -- shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
 
         if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
-            if not shared.MacroX.IsConverting then
-                for i, v in pairs(shared.MacroX.Farming) do
-                    if FindValue(FarmingValueNames, i) and FarmingFunctions[i] and v then
-                        FarmingFunctions[i]()
-                    end
+            for i, v in pairs(shared.MacroX.Farming) do
+                if FarmingFunctions[i] and v and not shared.MacroX.IsConverting then
+                    FarmingFunctions[i]()
                 end
             end
         end
@@ -645,24 +619,27 @@ task.spawn(function()
         -- Normal
 
         for i, v in pairs(shared.MacroX.Toys) do
-            if v then
+            if v and not shared.MacroX.Toys[i.."Cache"] then
                 ActivateToy(i)
+                shared.MacroX.Toys[i.."Cache"] = true
             end
         end
 
         -- Beesmas
 
         for i, v in pairs(shared.MacroX.BeesmasToys) do
-            if v then
+            if v and not shared.MacroX.BeesmasToys[i.."Cache"] then
                 ActivateBeesmasToy(i)
+                shared.MacroX.BeesmasToys[i.."Cache"] = true
             end
         end
 
         -- Consumables
 
         for i, v in pairs(shared.MacroX.Consumables) do
-            if v then
+            if v and not shared.MacroX.Consumables[i.."Cache"] then
                 ActivateConsumable(i)
+                shared.MacroX.Consumables[i.."Cache"] = true
             end
         end
     end
