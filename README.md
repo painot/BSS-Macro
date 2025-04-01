@@ -2,7 +2,7 @@
 ## Description
 - Dramatically aids you in Bee Swarm
 - Better, faster and more efficient version of Natro
-#### Disclaimer
+## Disclaimer
 - Any bans are not my responability albeit this scripts safe
 - If you get done up, thats on your dumbass for using a bootlegged executor
 - Yes, this script needs to be injected into the client.
