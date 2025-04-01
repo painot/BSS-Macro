@@ -5,17 +5,18 @@
 local RGHUC = "https://raw.githubusercontent.com/"
 local MainBranch = RGHUC .. "/painot/MacroX/main/"
 
-local URLs = {
-    UILib = "",
-    BoostFPS = MainBranch .. "API/BoostFPS.lua",
+local UILib = RGHUC .. ""
+
+local APIs = {
+    -- BoostFPS = MainBranch .. "API/BoostFPS.lua",
     Pathfinding = MainBranch .. "API/Pathfinding.lua",
     Planters = MainBranch .. "API/Planters.lua",
 }
 
-local UILibrary = loadstring(game:HttpGet(URLs.UILib))()
-local BoostFPS = loadstring(game:HttpGet(URLs.BoostFPS))()
-local Pathfinding = loadstring(game:HttpGet(URLs.Pathfinding))()
-local Planters = loadstring(game:HttpGet(URLs.Planters))()
+local UILibrary = loadstring(game:HttpGet(UILib))()
+local BoostFPS = loadstring(game:HttpGet(APIs.BoostFPS))()
+local Pathfinding = loadstring(game:HttpGet(APIs.Pathfinding))()
+local Planters = loadstring(game:HttpGet(APIs.Planters))()
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
