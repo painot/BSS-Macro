@@ -17,7 +17,7 @@
 
 ```lua
 -- Execute this straight and let the magic happen
-loadstring(game:HttpGet("https://raw.githubusercontent.com/painot/BSS-Macro/main/MacroX_Rewrite.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/painot/BSS-Macro/main/MacroX.lua"))()
 ```
 
 <br>
