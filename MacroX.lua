@@ -138,7 +138,7 @@ shared.MacroX = {
     }
 }
 
-local FarmingValueNames = {
+local _FarmingValueNames = {
     "Tool",
     "Flames",
     "Bubbles",
@@ -286,32 +286,36 @@ local function Farm(trying)
     Humanoid:MoveTo(trying.Position)
     repeat
         task.wait()
-    until (trying.Position-HumanoidRootPart.Position).magnitude <=4 or not IsToken(trying)
+    until (trying.Position-HumanoidRootPart.Position).Magnitude <=4 or not IsToken(trying)
 end
 
 local function _TravelTo(trying)
     Humanoid:MoveTo(trying.Position)
     repeat
         task.wait()
-    until (trying.Position-HumanoidRootPart.Position).magnitude <=4
+    until (trying.Position-HumanoidRootPart.Position).Magnitude <=4
 end
 
 local function CompareMagnitudes(v, cust)
-    return (v.Position-HumanoidRootPart.Position).magnitude < (cust or shared.MacroX.Magnitude/1.4)
+    return (v.Position-HumanoidRootPart.Position).Magnitude < (cust or shared.MacroX.Magnitude/1.4)
 end
 
 local function FindValue(Table, Value)
     if type(Table) == "table" then
         for index, value in pairs(Table) do
             if value == Value then
-                return true
+                return index
+            elseif type(value) == "table" then
+                local result = FindValue(value, Value)
+                if result then
+                    return result
+                end
             end
         end
-    else
-        return false
     end
-    return false
+    return nil
 end
+
 
 local function WalkTo(v3)
     Character.Humanoid:MoveTo(v3)
@@ -338,35 +342,16 @@ local FarmingFunctions = {
         -- mouse1click()
     end,
     
-    Tokens = function(v) -- means priority is on.
+    Tokens = function(v)
+        local decal = v:FindFirstChildOfClass("Decal") and v.Decal.Texture
+        local tokenid = decal and decal:match("rbxassetid://(%d+)")
         local PIDtbl = shared.MacroX.Importance.PriorityIDs
         local PTStbl = shared.MacroX.PriorityTokenStore
 
-        if v:FindFirstChildOfClass("Decal") then
-            local decal = v:FindFirstChildOfClass("Decal").Texture
-            local tokenid = decal:split('rbxassetid://')[2]
-            
-            -- Priority token part
-
-            if tokenid ~= nil and FindValue(PIDtbl, tokenid) then
-                if (v.Name == Player.Name and (not FindValue(PTStbl, v))) or CompareMagnitudes(v) then
-                    Farm(v)
-                end
-            end
-            
-            -- Blacklisted token part
-
-            local BlacklistedToken = false
-
-            if FindValue(shared.MacroX.Importance.BlacklistedIDs, tokenid) then
-                BlacklistedToken = true
-            end
-            
-            -- Normal token part
-
-            if CompareMagnitudes(v) and not BlacklistedToken then
-                Farm(v)
-            end
+        if tokenid and (FindValue(PIDtbl, tokenid) or (v.Name == Player.Name and not FindValue(PTStbl, v))) then
+            Farm(v)
+        elseif CompareMagnitudes(v) and not FindValue(shared.MacroX.Importance.BlacklistedIDs, tokenid) then
+            Farm(v)
         end
     end,
     
@@ -390,30 +375,31 @@ local FarmingFunctions = {
     
     Crosshairs = function()
         local crshtbl = shared.MacroX.Crosshair.Crosshairs
-        local crshrActive = shared.MacroX.Crosshair.Crosshair
         if #crshtbl == 0 then
             return
         end
         local instance = crshtbl[math.random(1, #crshtbl)]
-        if instance.BrickColor ~= BrickColor.new("Lime green") 
-            and instance.BrickColor ~= BrickColor.new("Flint") then
-            if crshrActive then 
-                repeat
-                    task.wait(0.1)
-                until not crshrActive
-            end
-            shared.MacroX.Crosshair.Crosshair = true
-            Farm(instance)
+        if instance.BrickColor == BrickColor.new("Lime green") 
+            or instance.BrickColor == BrickColor.new("Flint") then
+            table.remove(crshtbl, FindValue(crshtbl, instance))
+            return
+        end
+
+        if shared.MacroX.Crosshair.Crosshair then
             repeat
                 task.wait(0.1)
-                Farm(instance)
-            until not instance.Parent or instance.BrickColor == BrickColor.new("Forest green")
-            task.wait(0.1)
-            crshrActive = false
-            table.remove(crshtbl, FindValue(crshtbl, instance))
-        else
-            table.remove(crshtbl, FindValue(crshtbl, instance))
+            until not shared.MacroX.Crosshair.Crosshair
         end
+        
+        shared.MacroX.Crosshair.Crosshair = true
+        repeat
+            task.wait(0.1)
+            Farm(instance)
+        until not instance.Parent or instance.BrickColor == BrickColor.new("Forest green")
+        
+        task.wait(0.1)
+        shared.MacroX.Crosshair.Crosshair = false
+        table.remove(crshtbl, FindValue(crshtbl, instance))
     end,
     
     Fuzzy = function()
