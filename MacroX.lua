@@ -43,9 +43,9 @@ local Window = UILibrary:CreateWindow({
     LoadingSubtitle = "Well hello there, sir.",
 })
 
--- //  print(game.Players.LocalPlayer.CoreStats.Pollen.Value)
--- //  print(game.Players.LocalPlayer.CoreStats.Capacity.Value)
--- //  print(game.Players.LocalPlayer.CoreStats.Honey.Value)
+-- print(game.Players.LocalPlayer.CoreStats.Pollen.Value)
+-- print(game.Players.LocalPlayer.CoreStats.Capacity.Value)
+-- print(game.Players.LocalPlayer.CoreStats.Honey.Value)
 
 shared.MacroX = {
     Version = "1.0.0",
@@ -272,9 +272,9 @@ local Toggles = {
     Logs = {},
 }
 
--- //  actual code
+-- actual code
 
--- //  functions
+-- functions
 
 local function IsToken(token)
     if not token.Parent then
@@ -357,10 +357,10 @@ end
 
 local FarmingFunctions = {
     Tool = function()
-        -- //  mouse1click()
+        -- mouse1click()
     end,
     
-    Tokens = function(v) -- //  means priority is on.
+    Tokens = function(v) -- means priority is on.
         local PIDtbl = shared.MacroX.Importance.PriorityIDs
         local PTStbl = shared.MacroX.PriorityTokenStore
 
@@ -368,7 +368,7 @@ local FarmingFunctions = {
             local decal = v:FindFirstChildOfClass("Decal").Texture
             local tokenid = decal:split('rbxassetid://')[2]
             
-            -- //  Priority token part
+            -- Priority token part
 
             if tokenid ~= nil and FindValue(PIDtbl, tokenid) then
                 if (v.Name == Player.Name and (not FindValue(PTStbl, v))) or CompareMagnitudes(v) then
@@ -376,7 +376,7 @@ local FarmingFunctions = {
                 end
             end
             
-            -- //  Blacklisted token part
+            -- Blacklisted token part
 
             local BlacklistedToken = false
 
@@ -384,7 +384,7 @@ local FarmingFunctions = {
                 BlacklistedToken = true
             end
             
-            -- //  Normal token part
+            -- Normal token part
 
             if CompareMagnitudes(v) and not BlacklistedToken then
                 Farm(v)
@@ -469,28 +469,28 @@ local FarmingFunctions = {
 }
 
 local function ActivateConsumable(Consumable)
-    -- //  activate consumable
+    -- activate consumable
 end
 
 local function ActivateToy(toy)
-    -- //  activate toy
+    -- activate toy
 end
 
 local function ActivateBeesmasToy(toy)
-    -- //  activate beesmas toy
+    -- activate beesmas toy
 end
 
--- //  how the "travel and travel sequence" system works?
--- //  it resets your character then travels inbetween the
--- //  daily and total honey lb
--- //  then what it does is it executes a pre-made 
--- //  path by me to follow whereever
--- //  this may be unreliable esp for things like travel back to hive
--- //  i have a method in place to do where i 
--- //  reverse the order but that may not be possible
--- //  this sequence will support: SZ, 5BZ, 10BZ, 
--- //  15BZ, 25BZ, 35BZ (not 20BZ (except for ant/glue disp.) and 30BZ)
--- //  travel sequences for dispensers, fields and "toys" will be added later on.
+-- how the "travel and travel sequence" system works?
+-- it resets your character then travels inbetween the
+-- daily and total honey lb
+-- then what it does is it executes a pre-made 
+-- path by me to follow whereever
+-- this may be unreliable esp for things like travel back to hive
+-- i have a method in place to do where i 
+-- reverse the order but that may not be possible
+-- this sequence will support: SZ, 5BZ, 10BZ, 
+-- 15BZ, 25BZ, 35BZ (not 20BZ (except for ant/glue disp.) and 30BZ)
+-- travel sequences for dispensers, fields and "toys" will be added later on.
 
 local Sequences = {}
 
@@ -557,7 +557,7 @@ Sequences.GetZoneFromField = function(field)
     end
 end
 
--- //  Detection
+-- Detection
 task.spawn(function()
     Particles.ChildAdded:Connect(function(instance)
         if instance.Name:find("Vicious") then
@@ -585,7 +585,7 @@ task.spawn(function()
     end)
 end)
 
--- //  exec on startup
+-- exec on startup
 task.spawn(function()
     for _, part in pairs(FieldDecos:GetDescendants()) do
         task.wait(0.05)
@@ -605,14 +605,14 @@ task.spawn(function()
     end
 end)
 
--- //  Farming
+-- Farming
 
 task.spawn(function()
     while true do
         task.wait(0.7)
         shared.MacroX.Uptime += 0.7
         
-        -- //  shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
+        -- shared.MacroX.IsConverting = CoreStats.Pollen.Value > CoreStats.Capacity.Value * 0.95
 
         if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
             if not shared.MacroX.IsConverting then
@@ -625,7 +625,7 @@ task.spawn(function()
         end
     end
 
-    -- //  Tokens
+    -- Tokens
 
     Collectibles.ChildAdded:Connect(function(v)
         if shared.MacroX.IsFarming and not (shared.MacroX.IsConverting and shared.MacroX.IsTravelling) then
@@ -636,13 +636,13 @@ task.spawn(function()
     end)
 end)
 
--- //  Toys and Consumables
+-- Toys and Consumables
 
 task.spawn(function()
     while true do
         task.wait(60)
 
-        -- //  Normal
+        -- Normal
 
         for i, v in pairs(shared.MacroX.Toys) do
             if v then
@@ -650,7 +650,7 @@ task.spawn(function()
             end
         end
 
-        -- //  Beesmas
+        -- Beesmas
 
         for i, v in pairs(shared.MacroX.BeesmasToys) do
             if v then
@@ -658,7 +658,7 @@ task.spawn(function()
             end
         end
 
-        -- //  Consumables
+        -- Consumables
 
         for i, v in pairs(shared.MacroX.Consumables) do
             if v then
