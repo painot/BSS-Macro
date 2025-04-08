@@ -2,6 +2,8 @@
 -- I SUGGEST NOT TO USE THIS RN LMAO
 -- Large statements have been chopped into multiple lines
 
+-- am pro exploit maker!?!?!?!? uwu
+
 local RGHUC = "https://raw.githubusercontent.com/"
 local MainBranch = RGHUC .. "/painot/MacroX/main/"
 
